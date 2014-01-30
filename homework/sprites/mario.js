@@ -6,12 +6,11 @@
 // Yes, we can use jQuery here, but avoid it just in case you
 // really don't want to use it.  We do still keep things away
 // from the global namespace.
-(function () {
+window['EightBitSpriteLibrary'] = window['EightBitSpriteLibrary'] || {};
+
+window['EightBitSpriteLibrary'].mario = (function () {
     // Ditto on using jQuery here.
-    var canvas = document.getElementById("canvas"),
-        renderingContext = canvas.getContext("2d"),
-        
-        startingX = 300,
+    var startingX = 300,
         startingY = 100,
         currentX = startingX,
         currentY = startingY,
@@ -137,21 +136,25 @@
                     [[0, 2], [-4, 0], [0, -1], [1, 0], [0, -1], [3, 0]]
                 ]
             }
-        } 
-    };
-    
-    for (var parts in mario["drawData"]) {
-        renderingContext.beginPath();
-        for (var i = 0; i < mario["drawData"][parts].moves.length; i++) {
-            renderingContext.fillStyle = mario["drawData"][parts].fillColor;
-            renderingContext.moveTo(updateX(mario["drawData"][parts].moves[i][0]), 
-                                    updateY(mario["drawData"][parts].moves[i][1]));
-            
-            for (var j = 0; j < mario["drawData"][parts].lines[i].length; j++) {
-                renderingContext.lineTo(updateX(mario["drawData"][parts].lines[i][j][0]),
-                                        updateY(mario["drawData"][parts].lines[i][j][1]));
+        },
+
+        draw: function (renderingContext) {
+            for (var parts in mario["drawData"]) {
+                renderingContext.beginPath();
+                for (var i = 0; i < mario["drawData"][parts].moves.length; i++) {
+                    renderingContext.fillStyle = mario["drawData"][parts].fillColor;
+                    renderingContext.moveTo(updateX(mario["drawData"][parts].moves[i][0]), 
+                                            updateY(mario["drawData"][parts].moves[i][1]));
+                    
+                    for (var j = 0; j < mario["drawData"][parts].lines[i].length; j++) {
+                        renderingContext.lineTo(updateX(mario["drawData"][parts].lines[i][j][0]),
+                                                updateY(mario["drawData"][parts].lines[i][j][1]));
+                    }
+                }
+                renderingContext.fill();
             }
         }
-        renderingContext.fill();
-    }
+    };
+
+    return mario;
 }());
