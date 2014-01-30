@@ -11,8 +11,8 @@
     var canvas = document.getElementById("canvas"),
         renderingContext = canvas.getContext("2d"),
         
-        startingX = 300,
-        startingY = 300,
+        startingX = 200,
+        startingY = 200,
         currentX = startingX,
         currentY = startingY,
         pixelSize = 20;
@@ -99,32 +99,40 @@
                 ]
             }
         },
-        flash: function() {
+        
+        draw: function () {
+            currentX = startingX;
+            currentY = startingY;
+            for (var elements in cube["drawData"]) {
+                renderingContext.beginPath();
+                for (var i = 0; i < cube["drawData"][elements].moves.length; i++) {
+                    renderingContext.fillStyle = cube["drawData"][elements].fillColor;
+                    renderingContext.moveTo(updateX(cube["drawData"][elements].moves[i][0]), 
+                                            updateY(cube["drawData"][elements].moves[i][1]));
+                    for (var j = 0; j < cube["drawData"][elements].lines[i].length; j++) {
+                        renderingContext.lineTo(updateX(cube["drawData"][elements].lines[i][j][0]),
+                                                updateY(cube["drawData"][elements].lines[i][j][1]));
+                    }
+                }
+                renderingContext.fill();
+            }
+        },
+
+        flash: function () {
             setInterval(function () {
                 if (cube["drawData"].goldInside.fillColor === "#ffcc00") {
-                    cube["drawData"].goldInside.fillColor = "#000000";
+                    cube["drawData"].goldInside.fillColor = "#DC8909";
                     console.log(cube["drawData"].goldInside.fillColor);
-                } else if (cube["drawData"].goldInside.fillColor === "#000000") {
+                    cube["draw"]();
+                } else if (cube["drawData"].goldInside.fillColor === "#DC8909") {
                     cube["drawData"].goldInside.fillColor = "#ffcc00";
+                    cube["draw"]();
                     console.log(cube["drawData"].goldInside.fillColor);
                 }
             }, 1000);
         }
     };
 
-    for (var elements in cube["drawData"]) {
-        renderingContext.beginPath();
-        for (var i = 0; i < cube["drawData"][elements].moves.length; i++) {
-            renderingContext.fillStyle = cube["drawData"][elements].fillColor;
-            renderingContext.moveTo(updateX(cube["drawData"][elements].moves[i][0]), 
-                                    updateY(cube["drawData"][elements].moves[i][1]));
-            
-            for (var j = 0; j < cube["drawData"][elements].lines[i].length; j++) {
-                renderingContext.lineTo(updateX(cube["drawData"][elements].lines[i][j][0]),
-                                        updateY(cube["drawData"][elements].lines[i][j][1]));
-            }
-        }
-        renderingContext.fill();
-    }
+    cube["draw"]();
     cube["flash"]();
 }());
