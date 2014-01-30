@@ -6,12 +6,11 @@
 // Yes, we can use jQuery here, but avoid it just in case you
 // really don't want to use it.  We do still keep things away
 // from the global namespace.
-(function () {
+window['EightBitSpriteLibrary'] = window['EightBitSpriteLibrary'] || {};
+
+window['EightBitSpriteLibrary'].cube = (function () {
     // Ditto on using jQuery here.
-    var canvas = document.getElementById("canvas"),
-        renderingContext = canvas.getContext("2d"),
-        
-        startingX = 200,
+    var startingX = 200,
         startingY = 200,
         currentX = startingX,
         currentY = startingY,
@@ -100,7 +99,7 @@
             }
         },
         
-        draw: function () {
+        draw: function (renderingContext) {
             currentX = startingX;
             currentY = startingY;
             for (var elements in cube["drawData"]) {
@@ -118,21 +117,20 @@
             }
         },
 
-        flash: function () {
+        flash: function (renderingContext) {
             setInterval(function () {
                 if (cube["drawData"].goldInside.fillColor === "#ffcc00") {
                     cube["drawData"].goldInside.fillColor = "#DC8909";
                     console.log(cube["drawData"].goldInside.fillColor);
-                    cube["draw"]();
+                    cube["draw"](renderingContext);
                 } else if (cube["drawData"].goldInside.fillColor === "#DC8909") {
                     cube["drawData"].goldInside.fillColor = "#ffcc00";
-                    cube["draw"]();
+                    cube["draw"](renderingContext);
                     console.log(cube["drawData"].goldInside.fillColor);
                 }
             }, 1000);
         }
     };
 
-    cube["draw"]();
-    cube["flash"]();
+    return cube;
 }());
