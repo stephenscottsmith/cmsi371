@@ -100,12 +100,15 @@
             }
         },
         flash: function() {
-            (function changeBackground () {
+            setInterval(function () {
                 if (cube["drawData"].goldInside.fillColor === "#ffcc00") {
-                    cube["drawData"].goldInside.fillColor = "000000";
+                    cube["drawData"].goldInside.fillColor = "#000000";
+                    console.log(cube["drawData"].goldInside.fillColor);
+                } else if (cube["drawData"].goldInside.fillColor === "#000000") {
+                    cube["drawData"].goldInside.fillColor = "#ffcc00";
                     console.log(cube["drawData"].goldInside.fillColor);
                 }
-            }());
+            }, 1000);
         }
     };
 
