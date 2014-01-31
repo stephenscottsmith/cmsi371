@@ -62,7 +62,20 @@
             },
 
             {
-                draw: EightBitSpriteLibrary.mario.draw,
+                draw: EightBitSpriteLibrary.cube.draw,
+
+                predraw: function (currentFrame) {
+                    if (currentFrame % 30) {
+                        return;
+                    }
+
+                    if (EightBitSpriteLibrary.cube.drawData.goldInside.fillColor === "#ffcc00") {
+                        EightBitSpriteLibrary.cube.drawData.goldInside.fillColor = "#DC8909";
+                    } else if (EightBitSpriteLibrary.cube.drawData.goldInside.fillColor === "#DC8909") {
+                        EightBitSpriteLibrary.cube.drawData.goldInside.fillColor = "#ffcc00";
+                    }
+                },
+
                 keyframes: [
                     {
                         frame: 50,

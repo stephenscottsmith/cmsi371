@@ -141,6 +141,11 @@ var KeyframeTweener = {
                             ease(currentTweenFrame, rotateStart, rotateDistance, duration)
                         );
 
+                        // Do a sprite callback if they asked for one.
+                        if (sprites[i].predraw) {
+                            sprites[i].predraw(currentFrame);
+                        }
+
                         // Draw the sprite.
                         sprites[i].draw(renderingContext);
 
