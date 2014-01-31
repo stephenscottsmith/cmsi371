@@ -27,34 +27,42 @@
         // has a drawing function and an array of keyframes.
         sprites = [
             {
-                draw: square,
+                draw: EightBitSpriteLibrary.mario.draw,
                 keyframes: [
                     {
                         frame: 0,
-                        tx: 20,
-                        ty: 20,
+                        tx: -100,
+                        ty: -100,
                         ease: KeyframeTweener.linear
                     },
 
                     {
                         frame: 30,
-                        tx: 100,
-                        ty: 50,
+                        tx: 10,
+                        ty: 10,
                         ease: KeyframeTweener.quadEaseInOut
                     },
 
-                    // The last keyframe does not need an easing function.
                     {
                         frame: 80,
                         tx: 80,
-                        ty: 500,
+                        ty: 60,
                         rotate: 60 // Keyframe.rotate uses degrees.
+                    },
+
+                    {
+                        frame: 160,
+                        tx: 600,
+                        ty: -2000,
+                        sx: 5,
+                        sy: 5,
+                        ease: KeyframeTweener.quadEaseOut
                     }
                 ]
             },
 
             {
-                draw: circle,
+                draw: EightBitSpriteLibrary.mario.draw,
                 keyframes: [
                     {
                         frame: 50,

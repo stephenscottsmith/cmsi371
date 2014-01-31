@@ -12,8 +12,6 @@ window['EightBitSpriteLibrary'].mario = (function () {
     // Ditto on using jQuery here.
     var startingX = 300,
         startingY = 100,
-        currentX = startingX,
-        currentY = startingY,
         pixelSize = 20;
 
     var updateX = function (multiplier) {
@@ -139,6 +137,8 @@ window['EightBitSpriteLibrary'].mario = (function () {
         },
 
         draw: function (renderingContext) {
+            currentX = startingX;
+            currentY = startingY;
             for (var parts in mario["drawData"]) {
                 renderingContext.beginPath();
                 for (var i = 0; i < mario["drawData"][parts].moves.length; i++) {
