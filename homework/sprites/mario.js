@@ -24,7 +24,9 @@ window['EightBitSpriteLibrary'].mario = (function () {
         currentY = currentY + (multiplier * pixelSize);
         return currentY;
     } // JD: Missing semicolon.
-    
+
+    // JD: See note in pacman.js for some thoughts on how to animate Mario
+    //     in true 8-bit style.
     var mario = {
         drawData: {
             hat: {

@@ -27,7 +27,14 @@
         currentY = currentY + (multiplier * pixelSize);
         return currentY;
     } // JD: Missing semicolon.
-    
+
+    // JD: What you need here for true 8-bit style sprite animation is to
+    //     replicate the different "frames" for Pac Man---e.g., mouth wide
+    //     open, then a quarter open, then half open, then closed.  Maybe
+    //     index those by "frame number" in order to draw the right one.
+    //     Then in your custom toon callback, you would pick a frame number
+    //     based on the universal frame counter.  That would mimic how
+    //     8-bit animation was done way back when.
     var pacman = {
         drawData: {
             head: {
