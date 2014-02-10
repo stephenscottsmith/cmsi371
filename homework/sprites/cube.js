@@ -16,15 +16,17 @@ window['EightBitSpriteLibrary'].cube = (function () {
         currentY = startingY,
         pixelSize = 20;
 
+    // JD: Now that I am taking a closer look, these two functions are duplicated
+    //     across.  Need to find a way to consolidate these.
     var updateX = function (multiplier) {
         currentX = currentX + (multiplier * pixelSize);
         return currentX;
-    }
+    } // JD: Missing semicolon.
 
     var updateY = function (multiplier) {
         currentY = currentY + (multiplier * pixelSize);
         return currentY;
-    }
+    } // JD: Missing semicolon.
     
     var cube = {
         drawData: {

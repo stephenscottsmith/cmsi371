@@ -17,15 +17,16 @@
         currentY = startingY,
         pixelSize = 20;
 
+    // JD: See note in cube.js.
     var updateX = function (multiplier) {
         currentX = currentX + (multiplier * pixelSize);
         return currentX;
-    }
+    } // JD: Missing semicolon.
 
     var updateY = function (multiplier) {
         currentY = currentY + (multiplier * pixelSize);
         return currentY;
-    }
+    } // JD: Missing semicolon.
     
     var pacman = {
         drawData: {
