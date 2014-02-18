@@ -140,22 +140,30 @@ window['EightBitSpriteLibrary'].mario = (function () {
         },
 
         draw: function (renderingContext) {
-            currentX = startingX;
-            currentY = startingY;
-            for (var parts in mario["drawData"]) {
-                renderingContext.beginPath();
-                for (var i = 0; i < mario["drawData"][parts].moves.length; i++) {
-                    renderingContext.fillStyle = mario["drawData"][parts].fillColor;
-                    renderingContext.moveTo(updateX(mario["drawData"][parts].moves[i][0]), 
-                                            updateY(mario["drawData"][parts].moves[i][1]));
+            // currentX = startingX;
+            // currentY = startingY;
+            // for (var parts in mario["drawData"]) {
+            //     renderingContext.beginPath();
+            //     for (var i = 0; i < mario["drawData"][parts].moves.length; i++) {
+            //         renderingContext.fillStyle = mario["drawData"][parts].fillColor;
+            //         renderingContext.moveTo(updateX(mario["drawData"][parts].moves[i][0]), 
+            //                                 updateY(mario["drawData"][parts].moves[i][1]));
                     
-                    for (var j = 0; j < mario["drawData"][parts].lines[i].length; j++) {
-                        renderingContext.lineTo(updateX(mario["drawData"][parts].lines[i][j][0]),
-                                                updateY(mario["drawData"][parts].lines[i][j][1]));
-                    }
-                }
-                renderingContext.fill();
+            //         for (var j = 0; j < mario["drawData"][parts].lines[i].length; j++) {
+            //             renderingContext.lineTo(updateX(mario["drawData"][parts].lines[i][j][0]),
+            //                                     updateY(mario["drawData"][parts].lines[i][j][1]));
+            //         }
+            //     }
+            //     renderingContext.fill();
+            // }
+
+            var drawing = new Image();
+            drawing.src = "PNG/marioIdle.png";
+            drawing.onload = function () {
+                renderingContext.drawImage(drawing, 10, 150);
             }
+
+            console.log("HERE");
         }
     };
 

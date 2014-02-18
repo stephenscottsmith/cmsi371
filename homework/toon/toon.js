@@ -26,6 +26,10 @@ var KeyframeTweener = {
                 (-distance / 2) * ((percentComplete - 1) * (percentComplete - 3) - 1) + start;
     },
 
+    marioWalk: function (currentTime, start, distance, duration) {
+
+    },
+
     // The big one: animation initialization.  The settings parameter
     // is expected to be a JavaScript object with the following
     // properties:
@@ -71,6 +75,7 @@ var KeyframeTweener = {
             },
 
             sprites = settings.sprites;
+
 
         setInterval(function () {
             // Some reusable loop variables.
