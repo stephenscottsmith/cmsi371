@@ -8,25 +8,25 @@
 // from the global namespace.
 window['EightBitSpriteLibrary'] = window['EightBitSpriteLibrary'] || {};
 
-window['EightBitSpriteLibrary'].mario = (function () {
+window['EightBitSpriteLibrary'].pac = (function () {
     var loadImage = function (filename) {
             var drawing = new Image();
             drawing.src = filename;
             return drawing;
         };
 
-    var mario = {
+    var pac = {
         lastImage: 0,
         walkArray: [
-            loadImage("PNG/marioIdle.png"),
-            loadImage("PNG/marioWalk.png")
+            loadImage("PNG/pacUp.png"),
+            loadImage("PNG/pacClose.png")
         ],
 
         draw: function (renderingContext) {
-            renderingContext.drawImage(mario.walkArray[mario.lastImage], -30, 465);
-            mario.lastImage = (mario.lastImage + 1) % mario.walkArray.length;
+            renderingContext.drawImage(pac.walkArray[pac.lastImage], 400, 227);
+            pac.lastImage = (pac.lastImage + 1) % pac.walkArray.length;
         },
     };
 
-    return mario;
+    return pac;
 }());

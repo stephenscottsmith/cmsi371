@@ -93,7 +93,7 @@
         // has a drawing function and an array of keyframes.
         sprites = [
             {
-                draw: marioIdle,
+                draw: EightBitSpriteLibrary.mario.draw,
 
                 keyframes: [
                     {
@@ -158,26 +158,6 @@
                     }
                 ]
             },
-
-            // {
-            //     draw: marioDie,
-
-            //     keyframes: [
-            //         {
-            //             frame: 0,
-            //             tx: 0,
-            //             ty: 0,
-            //             ease: KeyframeTweener.linear
-            //         },
-
-            //         {
-            //             frame: 90,
-            //             tx: 0,
-            //             ty: 0,
-            //             ease: KeyframeTweener.quadEaseInOut
-            //         }
-            //     ]
-            // },
 
             {
                 draw: boxOn,
