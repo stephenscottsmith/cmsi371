@@ -1,0 +1,39 @@
+<!doctype html>
+
+<!-- This page "hosts" a simple demonstration of "Nanoshop,"
+     a tiny image processing module (emphasis on tiny). -->
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Nanoshop Demo</title>
+    </head>
+    <body>
+        <!-- Where the action will happen. -->
+        <canvas id="picture" width="512" height="512">
+            All your <code>canvas</code> are belong to us!
+        </canvas>
+
+        <!-- A little UI to trigger the filter. -->
+        <div align="center">
+            <select id="filters">
+                <option value="Darken">Darken</option>
+                <option value="BlackAndWhite">Black and White</option>
+                <option value="Greenify">Greenify</option>
+                <option value="ConvertRedToGreen">Red to Green</option>
+            </select>
+            <button id="apply-filter-button">Apply</button>
+        </div>
+        <!-- To at least make the above a little easier, we
+             at least recruit jQuery's services. -->
+        <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+        <script src="nanoshop.js"></script>
+        <!--Commented out nanoshop-demo so I could replace it with my mario sprite-->
+        <!--<script src="nanoshop-demo.js"></script>-->
+        <script src="mario.js"></script>
+        <script>
+            var canvas = $("#picture")[0];
+            var renderingContext = canvas.getContext("2d");
+            EightBitSpriteLibrary.mario.draw(renderingContext);
+        </script>
+    </body>
+</html>
