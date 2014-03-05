@@ -68,6 +68,26 @@ var NanoshopNeighborhood = {
         }
     },
 
+    // Add a blur combined with a yellow/gold for a soft glow, decrease the alpha
+    // just a little as well
+    // Inspiration: https://docs.unity3d.com/Documentation/Components/script-GlowEffect.html
+    SoftGlow: function (rgbaNeighborhood) {
+        var rgba = NanoshopNeighborhood.Blur(rgbaNeighborhood);
+        var r = rgba[0],
+            g = rgba[1],
+            b = rgba[2],
+            a = rgba[3],
+            multiplier = 1.5,
+            halfBrightness = 127;
+        if (r > halfBrightness || g > halfBrightness || b > halfBrightness) {
+            return [r * multiplier, g * multiplier, b, a * 0.8];
+        } else {
+            return [r, g, b, a];
+        }
+    },
+
+    
+
     /*
      * Applies the given filter to the given ImageData object,
      * then modifies its pixels according to the given filter.
