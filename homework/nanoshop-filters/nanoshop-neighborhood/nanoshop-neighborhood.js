@@ -37,6 +37,37 @@ var NanoshopNeighborhood = {
         return [ rTotal / 9, gTotal / 9, bTotal / 9, aTotal / 9 ];
     },
 
+    Maximizer: function (rgbaNeighborhood) {
+        var rMax = 0,
+            gMax = 0,
+            bMax = 0,
+            aMax = 0,
+            i;
+
+        for (i = 0; i < 9; i += 1) {
+            rMax = Math.max(rMax, rgbaNeighborhood[i].r);
+            gMax = Math.max(gMax, rgbaNeighborhood[i].g);
+            bMax = Math.max(bMax, rgbaNeighborhood[i].b);
+            aMax = Math.max(aMax, rgbaNeighborhood[i].a);
+        }
+
+        return [ rMax, gMax, bMax, aMax ];
+    },
+
+    BlackAndWhite: function (rgbaNeighborhood) {
+        for (i = 0; i < 9; i += 1) {
+            if (rgbaNeighborhood[i].r < 255 || 
+                rgbaNeighborhood[i].g < 255 ||
+                rgbaNeighborhood[i].b < 255) {
+                return [0, 0, 0, rgbaNeighborhood[i].a];
+            } else {
+                return [rgbaNeighborhood[i].r, rgbaNeighborhood[i].g,
+                        rgbaNeighborhood[i].b, rgbaNeighborhood[i].a];
+            }
+
+        }
+    },
+
     /*
      * Applies the given filter to the given ImageData object,
      * then modifies its pixels according to the given filter.
