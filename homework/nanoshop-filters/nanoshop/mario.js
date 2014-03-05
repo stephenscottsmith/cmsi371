@@ -167,7 +167,6 @@ window['EightBitSpriteLibrary'].mario = (function () {
 
     $("#apply-filter-button").click(function () {
         // Filter time.
-
         renderingContext.putImageData(
             Nanoshop.applyFilter(
                 renderingContext.getImageData(0, 0, canvas.width, canvas.height),

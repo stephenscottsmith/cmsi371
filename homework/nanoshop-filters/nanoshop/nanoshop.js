@@ -8,6 +8,15 @@ var Nanoshop = {
         return [r / 2, g / 2, b / 2, a];
     },
 
+    Brighten: function (r, g, b, a) {
+        if (r === 0 && g === 0 && b === 0) {
+            return [(r + 20), (g + 20), (b + 20), a];
+        } else {
+            return [r * 2, g * 2, b * 2, a];
+        }
+        
+    },
+
     BlackAndWhite: function (r, g, b, a) {
         if (r < 255 || g < 255 || b < 255) {
             return [0, 0, 0, a];
@@ -24,15 +33,25 @@ var Nanoshop = {
     // This filter is more specific to Mario given I only have one rgb red value
     ConvertRedToGreen: function (r, g, b, a) {
         var max = Math.max(r, g, b);
-        if (r > g && r > b && g < 105 && b < 97) {
+        // Make sure that its red enough
+        if (r > g && r > b && g < 121 && b < 97) {
             return [0, max, 0, a];
         } else {
             return [r, g, b, a];
         }
     },
 
+    Shift: function (r, g, b, a) {
+        return [b, r, g, a];
+    },
 
+    ReduceAlpha: function (r, g, b, a) {
+        return [r, g, b, a / 2];
+    },
 
+    IncreaseAlpha: function (r, g, b, a) {
+        return [r, g, b, a * 2];
+    },
 
     /*
      * Applies the given filter to the given ImageData object,
