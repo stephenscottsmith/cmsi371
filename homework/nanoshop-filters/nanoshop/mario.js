@@ -170,7 +170,6 @@ window['EightBitSpriteLibrary'].mario = (function () {
         renderingContext.putImageData(
             Nanoshop.applyFilter(
                 renderingContext.getImageData(0, 0, canvas.width, canvas.height),
-                // This is a basic "darkener."
                 Nanoshop[$("#filters").val()]
                 
             ),

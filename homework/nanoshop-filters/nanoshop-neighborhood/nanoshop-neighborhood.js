@@ -7,7 +7,7 @@ var NanoshopNeighborhood = {
      * A basic "darkener"---this one does not even use the entire pixel neighborhood;
      * just the exact current pixel like the original Nanoshop.
      */
-    darkener: function (rgbaNeighborhood) {
+    Darken: function (rgbaNeighborhood) {
         return [
             rgbaNeighborhood[4].r / 2,
             rgbaNeighborhood[4].g / 2,
@@ -20,7 +20,7 @@ var NanoshopNeighborhood = {
      * A basic "averager"---this one returns the average of all the pixels in the
      * given neighborhood.
      */
-    averager: function (rgbaNeighborhood) {
+    Blur: function (rgbaNeighborhood) {
         var rTotal = 0,
             gTotal = 0,
             bTotal = 0,

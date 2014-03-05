@@ -14,7 +14,13 @@
         </canvas>
 
         <!-- A little UI to trigger the filter. -->
-        <button id="apply-filter-button">Apply</button>
+        <div align="center">
+            <select id="filters">
+                <option value="Darken">Darken</option>
+                <option value="Blur">Blur</option>
+            </select>
+            <button id="apply-filter-button">Apply</button>
+        </div>
 
         <!-- To at least make the above a little easier, we
              at least recruit jQuery's services. -->
