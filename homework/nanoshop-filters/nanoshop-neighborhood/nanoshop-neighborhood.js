@@ -64,7 +64,6 @@ var NanoshopNeighborhood = {
                 return [rgbaNeighborhood[i].r, rgbaNeighborhood[i].g,
                         rgbaNeighborhood[i].b, rgbaNeighborhood[i].a];
             }
-
         }
     },
 
@@ -72,21 +71,72 @@ var NanoshopNeighborhood = {
     // just a little as well
     // Inspiration: https://docs.unity3d.com/Documentation/Components/script-GlowEffect.html
     SoftGlow: function (rgbaNeighborhood) {
-        var rgba = NanoshopNeighborhood.Blur(rgbaNeighborhood);
-        var r = rgba[0],
+        var rgba = NanoshopNeighborhood.Blur(rgbaNeighborhood),
+            r = rgba[0],
             g = rgba[1],
             b = rgba[2],
             a = rgba[3],
+            reduceAlpha = 0.8,
             multiplier = 1.5,
             halfBrightness = 127;
+
         if (r > halfBrightness || g > halfBrightness || b > halfBrightness) {
-            return [r * multiplier, g * multiplier, b, a * 0.8];
+            // Add a yellow/gold
+            return [r * multiplier, g * multiplier, b, a * reduceAlpha];
         } else {
             return [r, g, b, a];
         }
     },
 
-    
+    ThermalCamera: function (rgbaNeighborhood) {
+        var neighborhood = NanoshopNeighborhood.Maximizer(rgbaNeighborhood),
+            rMax = neighborhood[0],
+            gMax = neighborhood[1],
+            bMax = neighborhood[2],
+            fullColor = 255,
+            colorHelper = 102,
+            colorStep = 43,
+            lowLimitRed = fullColor - colorStep,
+            lowLimitYellow = lowLimitRed - colorStep,
+            lowLimitCyan = lowLimitYellow - colorStep,
+            lowLimitNavy = lowLimitCyan - colorStep,
+            lowLimitPurple = lowLimitNavy - colorStep,
+            lowLimitBlack = lowLimitPurple - colorStep,
+            lowest = 0;
+
+        if (rMax >= lowLimitRed || gMax >= lowLimitRed || bMax >= lowLimitRed) {
+            // Brightest is red
+            return [fullColor, lowest, lowest, fullColor];
+
+        } else if ((rMax < lowLimitRed && rMax >= lowLimitYellow) || 
+                    (gMax < lowLimitRed && gMax >= lowLimitYellow) ||
+                    (bMax < lowLimitRed && bMax >= lowLimitYellow)) {
+            // yellow
+            return [fullColor, fullColor, lowest, fullColor];
+
+        } else if ((rMax < lowLimitYellow && rMax >= lowLimitCyan) || 
+                    (gMax < lowLimitYellow && gMax >= lowLimitCyan) ||
+                    (bMax < lowLimitYellow && bMax >= lowLimitCyan)) {
+            // cyan
+            return [lowest, fullColor, fullColor, fullColor];
+            
+        } else if ((rMax < lowLimitCyan && rMax >= lowLimitNavy) || 
+                    (gMax < lowLimitCyan && gMax >= lowLimitNavy) ||
+                    (bMax < lowLimitCyan && bMax >= lowLimitNavy)) {
+            // navy
+            return [fullColor, colorHelper, 204, fullColor];
+            
+        } else if ((rMax < lowLimitNavy && rMax >= lowLimitPurple) || 
+                    (gMax < lowLimitNavy && gMax >= lowLimitPurple) ||
+                    (bMax < lowLimitNavy && bMax >= lowLimitPurple)) {
+            // purple
+            return [colorHelper, lowest, colorHelper, fullColor];
+            
+        } else {
+            // black
+            return [lowest, lowest, lowest, fullColor];
+        }
+    },
 
     /*
      * Applies the given filter to the given ImageData object,
