@@ -2,16 +2,25 @@
  * This file demonstrates how our homebrew keyframe-tweening
  * engine is used.
  */
-(function () {
+// JD: The window.onload got added in order to make sure that all images
+//     are in before we start (see long comment below for explanation of
+//     why).  If you were using jQuery, this would be just
+//     $(function () { ... });
+window.onload = (function () {
     var canvas = document.getElementById("canvas"),
         // First, a selection of "drawing functions" from which we
         // can choose.  Their common trait: they all accept a single
         // renderingContext argument.
+
+        // JD: I officially give you permission to delete this code.
+        //     Not that you needed it, because, you know, *these are
+        //     not being used*.
         square = function (renderingContext) {
             renderingContext.fillStyle = "blue";
             renderingContext.fillRect(-20, -20, 40, 40);
         },
 
+        // JD: Die die die.
         circle = function (renderingContext) {
             renderingContext.strokeStyle = "red";
             renderingContext.beginPath();
@@ -19,6 +28,14 @@
             renderingContext.stroke();
         },
 
+        // JD: So, as we have established, the reason this does not work
+        //     universally in all browsers is that they may have different
+        //     image loading implementations.  To be completely universal,
+        //     you should *load all of your images first* then save them in
+        //     variables or right in the page.
+        //
+        //     To illustrate, I did this with the images in your background.
+        //     You do the rest.
         marioIdle = function (renderingContext) {
             var drawing = new Image();
             drawing.src = "PNG/marioIdle.png";
@@ -384,15 +401,17 @@
             renderingContext.save();
             // renderingContext.fillStyle = "white";
             // renderingContext.fillRect(0, 0, canvas.width, canvas.height);
-            var backgroundImage = new Image();
-            backgroundImage.src = "PNG/background.png";
+//            var backgroundImage = new Image();
+//            backgroundImage.src = "PNG/background.png";
+            var backgroundImage = document.getElementById("background");
             renderingContext.drawImage(backgroundImage, 0, 0);
-            var pipe = new Image();
-            pipe.src = "PNG/pipe.png";
+//            var pipe = new Image();
+//            pipe.src = "PNG/pipe.png";
+            var pipe = document.getElementById("pipe");
             renderingContext.drawImage(pipe, 840, 358);
 
             // EightBitSpriteLibrary.cube.draw(renderingContext);
             renderingContext.restore();
         }
     });
-}());
+});

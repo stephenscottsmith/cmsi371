@@ -26,6 +26,9 @@ var KeyframeTweener = {
                 (-distance / 2) * ((percentComplete - 1) * (percentComplete - 3) - 1) + start;
     },
 
+    // JD: Missing the 2 new easing functions.  Still applicable despite
+    //     your going 8-bit.
+
     // The big one: animation initialization.  The settings parameter
     // is expected to be a JavaScript object with the following
     // properties:
