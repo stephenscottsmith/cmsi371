@@ -54,6 +54,23 @@ var NanoshopNeighborhood = {
         return [ rMax, gMax, bMax, aMax ];
     },
 
+    Minimizer: function (rgbaNeighborhood) {
+        var rMin = 255,
+            gMin = 255,
+            bMin = 255,
+            aMin = 255,
+            i;
+
+        for (i = 0; i < 9; i += 1) {
+            rMin = Math.min(rMin, rgbaNeighborhood[i].r);
+            gMin = Math.min(gMin, rgbaNeighborhood[i].g);
+            bMin = Math.min(bMin, rgbaNeighborhood[i].b);
+            aMin = Math.min(aMin, rgbaNeighborhood[i].a);
+        }
+
+        return [ rMin, gMin, bMin, aMin ];
+    },
+
     BlackAndWhite: function (rgbaNeighborhood) {
         for (i = 0; i < 9; i += 1) {
             if (rgbaNeighborhood[i].r < 255 || 
