@@ -302,36 +302,27 @@ var Primitives = {
         color1 = color1 || [0, 0, 0];
         // Right side
         // console.log("xc: " + xc + "\nx: " + x + "\nyc: " + yc + "\ny: " + y);
+        var maxY = yc + y;
+        var minY = yc - y;
         for (var i = xc; i <= xc + x; i++) {
-            for (var j = yc; j <= yc + y; j++) {
-                this.setPixel(context, i, j, color1[0], color1[1], color1[2]);
-            }
-            for (var j = yc; j >= yc - y; j--) {
+            for (var j = minY; j <= maxY; j++) {
                 this.setPixel(context, i, j, color1[0], color1[1], color1[2]);
             }
         }
-        for (var i = xc; i <= xc + y; i++) {
-            for (var j = yc; j <= yc + x; j++) {
-                this.setPixel(context, i, j, color1[0], color1[1], color1[2]);
-            }
-            for (var j = yc; j >= yc - x; j--) {
-                this.setPixel(context, i, j, color1[0], color1[1], color1[2]);
-            }
-        }
-
         for (var i = xc - x; i <= xc; i++) {
-            for (var j = yc; j <= yc + y; j++) {
+            for (var j = minY; j <= maxY; j++) {
                 this.setPixel(context, i, j, color2[0], color2[1], color2[2]);
             }
-            for (var j = yc; j >= yc - y; j--) {
-                this.setPixel(context, i, j, color2[0], color2[1], color2[2]);
+        }
+        var maxY = yc + x;
+        var minY = yc - x;
+        for (var i = xc; i <= xc + y; i++) {
+            for (var j = minY; j <= maxY; j++) {
+                this.setPixel(context, i, j, color1[0], color1[1], color1[2]);
             }
         }
         for (var i = xc - y; i <= xc; i++) {
-            for (var j = yc; j <= yc + x; j++) {
-                this.setPixel(context, i, j, color2[0], color2[1], color2[2]);
-            }
-            for (var j = yc; j >= yc - x; j--) {
+            for (var j = minY; j <= maxY; j++) {
                 this.setPixel(context, i, j, color2[0], color2[1], color2[2]);
             }
         }
