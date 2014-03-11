@@ -21,6 +21,7 @@
     Primitives.lineBres1(renderingContext, 210, 210, 409, 110);
     Primitives.lineBres2(renderingContext, 415, 210, 614, 110);
     Primitives.lineBres3(renderingContext, 620, 210, 819, 110);
+    
     // Commented out below to create more lineBresenham calls for my mod demonstration
     // of its function
     // Primitives.lineBresenham(renderingContext, 825, 210, 1024, 110);
@@ -37,11 +38,14 @@
 
 
     // A few circles.
-    Primitives.circleTrig(renderingContext, 105, 315, 100);
-    Primitives.circleDDA(renderingContext, 310, 315, 100);
-    Primitives.circleBres1(renderingContext, 515, 315, 100);
-    Primitives.circleBres2(renderingContext, 720, 315, 100);
-    Primitives.circleBres3(renderingContext, 925, 315, 100);
+    // Primitives.circleTrig(renderingContext, 105, 315, 100);
+    // Primitives.circleDDA(renderingContext, 310, 315, 100);
+    // Primitives.circleBres1(renderingContext, 515, 315, 100);
+    // Primitives.circleBres2(renderingContext, 720, 315, 100);
+    //Primitives.circleBres3(renderingContext, 925, 315, 100);
+
+    Primitives.circleBres3(renderingContext, 925, 315, 100, [255, 0, 0], [0, 0, 255]);
+
 
     // And finally...polygon fills!
     renderingContext.save();

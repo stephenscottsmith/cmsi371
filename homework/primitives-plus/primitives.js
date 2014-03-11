@@ -273,22 +273,101 @@ var Primitives = {
         }
     },
 
+    // fillCircle: function (context, x, y, w, h, c1, c2) {
+    //     var module = this,
+    //         i,
+    //         j,
+    //         bottom = y + h,
+    //         right = x + w,
+    //         leftColor = c1 ? [c1[0], c1[1], c1[2]] : c1,
+    //         rightColor = c2 ? [c2[0], c2[1], c2[2]] : c2,
+    //         leftVDelta,
+    //         rightVDelta,
+    //         hDelta,
+    //         currentColor,
+
+    //         fillCircleTwoColors = function () {
+
+    //         };
+
+    // },
+
     /*
      * Time for the circles.  First, we observe that it is sufficient
      * to compute one-eighth of a circle: the other seven portions are
      * permutations of that eighth's coordinates.  So we define a helper
      * function that all of the circle implementations will use...
      */
-    plotCirclePoints: function (context, xc, yc, x, y, color) {
-        color = color || [0, 0, 0];
-        this.setPixel(context, xc + x, yc + y, color[0], color[1], color[2]);
-        this.setPixel(context, xc + x, yc - y, color[0], color[1], color[2]);
-        this.setPixel(context, xc + y, yc + x, color[0], color[1], color[2]);
-        this.setPixel(context, xc + y, yc - x, color[0], color[1], color[2]);
-        this.setPixel(context, xc - x, yc + y, color[0], color[1], color[2]);
-        this.setPixel(context, xc - x, yc - y, color[0], color[1], color[2]);
-        this.setPixel(context, xc - y, yc + x, color[0], color[1], color[2]);
-        this.setPixel(context, xc - y, yc - x, color[0], color[1], color[2]);
+    plotCirclePoints: function (context, xc, yc, x, y, color1, color2) {
+        color1 = color1 || [0, 0, 0];
+        // Right side
+        // console.log("xc: " + xc + "\nx: " + x + "\nyc: " + yc + "\ny: " + y);
+        for (var i = xc; i <= xc + x; i++) {
+            for (var j = yc; j <= yc + y; j++) {
+                this.setPixel(context, i, j, color1[0], color1[1], color1[2]);
+            }
+            for (var j = yc; j >= yc - y; j--) {
+                this.setPixel(context, i, j, color1[0], color1[1], color1[2]);
+            }
+        }
+        for (var i = xc; i <= xc + y; i++) {
+            for (var j = yc; j <= yc + x; j++) {
+                this.setPixel(context, i, j, color1[0], color1[1], color1[2]);
+            }
+            for (var j = yc; j >= yc - x; j--) {
+                this.setPixel(context, i, j, color1[0], color1[1], color1[2]);
+            }
+        }
+
+        for (var i = xc - x; i <= xc; i++) {
+            for (var j = yc; j <= yc + y; j++) {
+                this.setPixel(context, i, j, color2[0], color2[1], color2[2]);
+            }
+            for (var j = yc; j >= yc - y; j--) {
+                this.setPixel(context, i, j, color2[0], color2[1], color2[2]);
+            }
+        }
+        for (var i = xc - y; i <= xc; i++) {
+            for (var j = yc; j <= yc + x; j++) {
+                this.setPixel(context, i, j, color2[0], color2[1], color2[2]);
+            }
+            for (var j = yc; j >= yc - x; j--) {
+                this.setPixel(context, i, j, color2[0], color2[1], color2[2]);
+            }
+        }
+
+        
+        // this.setPixel(context, xc + x, yc + y, color1[0], color1[1], color1[2]);
+        // this.setPixel(context, xc + x, yc - y, color1[0], color1[1], color1[2]);
+        // this.setPixel(context, xc + y, yc + x, color1[0], color1[1], color1[2]);
+        // this.setPixel(context, xc + y, yc - x, color1[0], color1[1], color1[2]);
+
+        // if (color2 === undefined) {
+        //     this.setPixel(context, xc - x, yc + y, color1[0], color1[1], color1[2]);
+        //     this.setPixel(context, xc - x, yc - y, color1[0], color1[1], color1[2]);
+        //     this.setPixel(context, xc - y, yc + x, color1[0], color1[1], color1[2]);
+        //     this.setPixel(context, xc - y, yc - x, color1[0], color1[1], color1[2]);
+        // } else {
+        //     color2 = color2 || [0, 0, 0];
+        //     this.setPixel(context, xc - x, yc + y, color2[0], color2[1], color2[2]);
+        //     this.setPixel(context, xc - x, yc - y, color2[0], color2[1], color2[2]);
+        //     this.setPixel(context, xc - y, yc + x, color2[0], color2[1], color2[2]);
+        //     this.setPixel(context, xc - y, yc - x, color2[0], color2[1], color2[2]);
+
+
+        //     // for (var i = x; i <= xc; i++) {
+        //     //     alert("shit");
+        //     //     for (var j = yc - y; j <= yc + y; j++) {
+        //     //         this.setPixel(context, x, y, color2[0], color2[1], color2[2]);
+        //     //     }
+                
+        // }
+            // leftColor = color1 ? [color1[0], color1[1], color1[2]] : color1,
+            // rightColor = color2 ? [color2[0], color2[1], color2[2]] : color2,
+            // leftVDelta,
+            // rightVDelta,
+            // hDelta,
+
     },
 
     // First, the most naive possible implementation: circle by trigonometry.
@@ -370,13 +449,13 @@ var Primitives = {
     },
 
     // Last but not least...
-    circleBres3: function (context, xc, yc, r, color) {
+    circleBres3: function (context, xc, yc, r, color1, color2) {
         var x = r,
             y = 0,
             e = 0;
 
         while (y <= x) {
-            this.plotCirclePoints(context, xc, yc, x, y, color);
+            this.plotCirclePoints(context, xc, yc, x, y, color1, color2);
             y += 1;
             e += (2 * y - 1);
             if (e > x) {
