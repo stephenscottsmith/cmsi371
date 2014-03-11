@@ -8,6 +8,11 @@
 // from the global namespace.
 window['EightBitSpriteLibrary'] = window['EightBitSpriteLibrary'] || {};
 
+// JD: Just as a note: officially, you shouldn't have copied this file
+//     into a new version.  Instead, you should have refactored your
+//     original sprite in place.  However, I will make an exception for
+//     for you because I know that you essentially overhauled your sprite
+//     approach to better match the original 8-bit style from the 1980s.
 window['EightBitSpriteLibrary'].mario = (function () {
     var loadImage = function (filename) {
             var drawing = new Image();
