@@ -170,8 +170,12 @@ window['EightBitSpriteLibrary'].mario = (function () {
         renderingContext.putImageData(
             Nanoshop.applyFilter(
                 renderingContext.getImageData(0, 0, canvas.width, canvas.height),
+
+                // JD: Neat trick here.  This shows me that you get closures.
+                //     But now as I mentioned in the .html, can you put this
+                //     whole click block somewhere else, so that mario.js can
+                //     stay pure as a sprite file?
                 Nanoshop[$("#filters").val()]
-                
             ),
             0, 0
         );

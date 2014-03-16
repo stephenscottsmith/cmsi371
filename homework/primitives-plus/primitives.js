@@ -252,10 +252,10 @@ var Primitives = {
 
         color = color || [0, 0, 0];
         while (true) {
-            if (pixelCount > 0) {
+            if (pixelCount > 0) { // JD: Or, "if (pixelCount)"
                 this.setPixel(context, x, y, color[0], color[1], color[2]);
                 pixelCount--;
-            } else if (pixelCount === 0) {
+            } else if (pixelCount === 0) { // JD: Or, just the "else."
                 pixelCount = dash;
             }
             
@@ -304,6 +304,9 @@ var Primitives = {
         // console.log("xc: " + xc + "\nx: " + x + "\nyc: " + yc + "\ny: " + y);
         var maxY = yc + y;
         var minY = yc - y;
+
+        // JD: OK, at least you're filling the circle.  You just need to
+        //     figure out how to grade those colors.
         for (var i = xc; i <= xc + x; i++) {
             for (var j = minY; j <= maxY; j++) {
                 this.setPixel(context, i, j, color1[0], color1[1], color1[2]);
