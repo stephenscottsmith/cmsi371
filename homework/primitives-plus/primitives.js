@@ -273,24 +273,34 @@ var Primitives = {
         }
     },
 
-    // fillCircle: function (context, x, y, w, h, c1, c2) {
-    //     var module = this,
-    //         i,
-    //         j,
-    //         bottom = y + h,
-    //         right = x + w,
-    //         leftColor = c1 ? [c1[0], c1[1], c1[2]] : c1,
-    //         rightColor = c2 ? [c2[0], c2[1], c2[2]] : c2,
-    //         leftVDelta,
-    //         rightVDelta,
-    //         hDelta,
-    //         currentColor,
+    fillCircle: function (context, minX, maxX, minY, maxY, halfway, color1, color2) {
+        var netX = maxX - minX;
+        var redAverage = Math.ceil((color1[0] + color2[0]) / netX);
+        var greenAverage = Math.ceil((color1[1] + color2[1]) / netX);
+        var blueAverage = Math.ceil((color1[2] + color2[2]) / netX);
+        //alert("red: " + redAverage + "\ngreen: " + greenAverage + "\nblue: " + blueAverage);
 
-    //         fillCircleTwoColors = function () {
+        for (var i = minX; i <= maxX; i++) {
+            for (var j = minY; j <= maxY; j++) {
+                if (i <= halfway) {
+                    Primitives.setPixel(context, i, j, color1[0], color1[1], color1[2]);
+                    
+                } else {
+                    Primitives.setPixel(context, i, j, color1[0], color1[1], color1[2]);
+                    //console.log(2);
+                }
 
-    //         };
+            }
+            // alert("color1[0]: " + color1[0]);
+            // alert("deltas[0]: " + deltas[0]);
+            color1[0] += redAverage;
+            color1[1] += greenAverage;
+            color1[2] += blueAverage;
+            // alert("color1[0]: " + color1[0]);
+            // alert("deltas[0]: " + deltas[0]);
 
-    // },
+        }
+    },
 
     /*
      * Time for the circles.  First, we observe that it is sufficient
@@ -299,31 +309,60 @@ var Primitives = {
      * function that all of the circle implementations will use...
      */
     plotCirclePoints: function (context, xc, yc, x, y, color1, color2) {
-        color1 = color1 || [0, 0, 0];
-        // Right side
+        //color1 = color1 || [0, 0, 0];
+        
+
+        // var fillCircle = function (context, minX, maxX, minY, maxY, halfway, color1, color2) {
+        //     console.log(1);
+        //     var netX = maxX - minX;
+        //     var redAverage = Math.ceil(color1[0] + color2[0]) / netX;
+        //     var greenAverage = Math.ceil(color1[1] + color2[1]) / netX;
+        //     var blueAverage = Math.ceil(color1[2] + color2[2]) / netX;
+        //     //alert("red: " + redAverage + "\ngreen: " + greenAverage + "\nblue: " + blueAverage);
+
+        //     for (var i = minX; i <= maxX; i++) {
+        //         for (var j = minY; j <= maxY; j++) {
+        //             // if (i <= halfway) {
+        //                 Primitives.setPixel(context, i, j, color1[0], color1[1], color1[2]);
+                        
+        //             // } else {
+        //             //     Primitives.setPixel(context, i, j, color2[0], color2[1], color2[2]);
+        //             //     //console.log(2);
+        //             // }
+
+        //         }
+        //         // alert("color1[0]: " + color1[0]);
+        //         // alert("deltas[0]: " + deltas[0]);
+        //         color1[0] += redAverage;
+        //         color1[1] += greenAverage;
+        //         color1[2] += blueAverage;
+        //         // alert("color1[0]: " + color1[0]);
+        //         // alert("deltas[0]: " + deltas[0]);
+
+        //     }
+        // };
         // console.log("xc: " + xc + "\nx: " + x + "\nyc: " + yc + "\ny: " + y);
+        // This draws the outer quarters of the circle
+        var maxX = xc + x;
+        var minX = xc - x;
+        var netX = maxX - minX;
         var maxY = yc + y;
         var minY = yc - y;
-        for (var i = xc; i <= xc + x; i++) {
-            for (var j = minY; j <= maxY; j++) {
-                this.setPixel(context, i, j, color1[0], color1[1], color1[2]);
-            }
-        }
-        for (var i = xc - x; i <= xc; i++) {
-            for (var j = minY; j <= maxY; j++) {
-                this.setPixel(context, i, j, color2[0], color2[1], color2[2]);
-            }
-        }
+        var halfway = (maxX + minX) / 2;
+        Primitives.fillCircle(context, minX, maxX, minY, maxY, halfway, color1, color2);
+        
+        //This draws the inner quarters of the circle
+        var maxX = xc + y;
+        var minX = xc - y;
         var maxY = yc + x;
         var minY = yc - x;
-        for (var i = xc; i <= xc + y; i++) {
-            for (var j = minY; j <= maxY; j++) {
-                this.setPixel(context, i, j, color1[0], color1[1], color1[2]);
-            }
-        }
+        var halfway = (maxX + minX) / 2;
+        Primitives.fillCircle(context, minX, maxX, minY, maxY, halfway, color1, color2);
+
+        
         for (var i = xc - y; i <= xc; i++) {
             for (var j = minY; j <= maxY; j++) {
-                this.setPixel(context, i, j, color2[0], color2[1], color2[2]);
+                this.setPixel(context, i, j, color1[0], color1[1], color1[2]);
             }
         }
 
