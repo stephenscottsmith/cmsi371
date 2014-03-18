@@ -3,6 +3,11 @@
  * pixel-level image processing.
  */
 var Nanoshop = {
+    // JD: Generally all good, with one note---it's somewhat unusual
+    //     for properties in JavaScript to start with a capital letter.
+    //     Functions like these tend to have a naming convention of
+    //     a lowercase first letter.
+
     // This is a basic "darkener."
     Darken: function (r, g, b, a) {
         return [r / 2, g / 2, b / 2, a];

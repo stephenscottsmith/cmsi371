@@ -71,6 +71,8 @@ var NanoshopNeighborhood = {
         return [ rMin, gMin, bMin, aMin ];
     },
 
+    // JD: Uhhhh...you do realize you never get past the first iteration
+    //     of the for loop here, right?
     BlackAndWhite: function (rgbaNeighborhood) {
         for (i = 0; i < 9; i += 1) {
             if (rgbaNeighborhood[i].r < 255 || 
@@ -87,7 +89,9 @@ var NanoshopNeighborhood = {
     // Add a blur combined with a yellow/gold for a soft glow, decrease the alpha
     // just a little as well
     // Inspiration: https://docs.unity3d.com/Documentation/Components/script-GlowEffect.html
+    // JD: ^^^^^Nice, looking outside for inspiration.
     SoftGlow: function (rgbaNeighborhood) {
+        // JD: Nice move there, building on another filter first.
         var rgba = NanoshopNeighborhood.Blur(rgbaNeighborhood),
             r = rgba[0],
             g = rgba[1],
@@ -105,6 +109,9 @@ var NanoshopNeighborhood = {
         }
     },
 
+    // JD: Another interesting one, though admittedly most of the logic is
+    //     single-pixel after you've done the Maximizer.  Would have been
+    //     nicer if you let the neighborhood "participate" more.
     ThermalCamera: function (rgbaNeighborhood) {
         var neighborhood = NanoshopNeighborhood.Maximizer(rgbaNeighborhood),
             rMax = neighborhood[0],
