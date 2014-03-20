@@ -181,10 +181,22 @@
         //     mode: gl.TRIANGLES
         // },
 
+        // {
+        //     color: { r: 0.0, g: 0.0, b: 1.0 },
+        //     vertices: Shapes.toRawTriangleArray(Shapes.perfectPyramid()),
+        //     mode: gl.TRIANGLES
+        // },
+
+        // {
+        //     color: {r: 0.5, g: 0.5, b: 0.5},
+        //     vertices: Shapes.toRawTriangleArray(Shapes.hemisphere(0.5)),
+        //     mode: gl.TRIANGLES
+        // },
+
         {
-            color: { r: 0.0, g: 0.0, b: 1.0 },
-            vertices: Shapes.toRawTriangleArray(Shapes.perfectPyramid()),
-            mode: gl.TRIANGLES
+          color: { r: 0.3, g: 0.3, b: 0.8 },
+          vertices: Shapes.toRawTriangleArray(Shapes.hemisphere(0.5)),
+          mode: gl.TRIANGLES
         }
 
     ];
@@ -251,6 +263,14 @@
      * Displays an individual object.
      */
     drawObject = function (object) {
+        // Check to see if the object has a children property
+        // if so, recurse
+        if (object.hasOwnProperty('children') && object.children.length > 0) {
+            for (var i = 0; i < object.children.length; i++) {
+                drawObject(children[i]);
+            }
+        }
+
         // Set the varying colors.
         gl.bindBuffer(gl.ARRAY_BUFFER, object.colorBuffer);
         gl.vertexAttribPointer(vertexColor, 3, gl.FLOAT, false, 0, 0);
