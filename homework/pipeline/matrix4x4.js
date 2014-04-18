@@ -54,49 +54,6 @@ var Matrix4x4 = (function () {
         );
     };
 
-
-
-
-
-
-    // HELPER FUNCTIONS & EXTRA PROPERTIES
-    
-    // Returns length of coordinates array, should be 16
-    matrix4x4.prototype.dimensions = function () {
-        return this.coordinates.length;
-    };
-
-    var checkDimensions = function(matrix1, matrix2) {
-        if (matrix1.dimensions() !== matrix2. dimensions()) {
-            throw "Matrices have different dimensions";
-        }
-    };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-    // Returns the array of coordinates in the matrix
-    matrix4x4.prototype.coordinates = function () {
-        return this.coordinates;
-    }
-
-
-
     var getRotationMatrix = function (angle, x, y, z) {
         // In production code, this function should be associated
         // with a matrix object with associated functions.
@@ -143,33 +100,111 @@ var Matrix4x4 = (function () {
 
             0.0, 0.0, 0.0, 1.0
         ];
-    },
+    };
 
-    getOrthoMatrix = function (left, right, bottom, top, zNear, zFar) {
-            var width = right - left,
-                height = top - bottom,
-                depth = zFar - zNear;
+    matrix4x4.getOrthoMatrix = function (left, right, bottom, top, near, far) {
+        var width = right - left,
+            height = top - bottom,
+            depth = far - near;
 
-            return [
-                2.0 / width,
-                0.0,
-                0.0,
-                0.0,
+        // This statement checks to see if the viewing volume is symmetric.
+        // If it is it returns the matrix as the first Matrix instead of the second.
+        if (right === -left && top === -bottom) {
+            return new Matrix4x4 (
+                1.0 / right, 0.0, 0.0, 0.0,
+                0.0, 1.0 / top, 0.0, 0.0,
+                0.0, 0.0, -2.0 / depth, -(far + near) / depth,
+                0.0, 0.0, 0.0, 1.0
+            );
+        } else {
+            return new Matrix4x4 (
+                2.0 / width, 0.0, 0.0,  -(right + left) / width,
+                0.0, 2.0 / height, 0.0, -(top + bottom) / height,
+                0.0, 0.0, -2.0 / depth, -(far + near) / depth,
+                0.0, 0.0, 0.0, 1.0
+            );
+        }
+    };
 
-                0.0,
-                2.0 / height,
-                0.0,
-                0.0,
+    matrix4x4.getFrustumMatrix = function (left, right, bottom, top, near, far) {
+        var width = right - left,
+            height = top - bottom,
+            depth = far - near;
 
-                0.0,
-                0.0,
-                -2.0 / depth,
-                0.0,
+        // This statement checks to see if the viewing volume is symmetric.
+        // If it is it returns the matrix as the first Matrix instead of the second.
+        if (right === -left && top === -bottom) {
+            return new Matrix4x4 (
+                near / right, 0.0, 0.0, 0.0,
+                0.0, near / top, 0.0, 0.0,
+                0.0, 0.0, -(far + near) / depth, (-2.0 * near * far) / depth,
+                0.0, 0.0, -1.0, 0.0
+            );
+        } else {
+            return new Matrix4x4 (
+                2.0 * near / width, 0.0, (right + left) / width, 0,
+                0.0, 2.0 * near / height, (top + bottom) / height, 0,
+                0.0, 0.0, -(far + near) / depth, (-2.0 * near * far) / depth,
+                0.0, 0.0, -1.0, 0.0
+            );
+        }
+    };
 
-                -(right + left) / width,
-                -(top + bottom) / height,
-                -(zFar + zNear) / depth,
-                1.0
-            ];
-        };
+
+    // HELPER FUNCTIONS & EXTRA PROPERTIES
+    
+    // Returns length of coordinates array, should be 16
+    matrix4x4.prototype.dimensions = function () {
+        return this.coordinates.length;
+    };
+
+    var checkDimensions = function(matrix1, matrix2) {
+        if (matrix1.dimensions() !== matrix2. dimensions()) {
+            throw "Matrices have different dimensions";
+        }
+    };
+
+    matrix4x4.prototype.coordinateAt = function (index) {
+        if (index < 0 || index > 15) {
+            throw "Index out of bounds";
+        }
+        return this.coordinates[index];
+    };
+
+    matrix4x4.prototype.rowAt = function (index) {
+        if (index < 0 || index > 3) {
+            throw "Index out of bounds";
+        }
+
+        return [this.coordinates[0 + (index * 4)],
+                this.coordinates[1 + (index * 4)],
+                this.coordinates[2 + (index * 4)],
+                this.coordinates[3 + (index * 4)]];
+    };
+
+    matrix4x4.prototype.columnAt = function (index) {
+        if (index < 0 || index > 3) {
+            throw "Index out of bounds";
+        }
+
+        return [this.coordinates[index],
+                this.coordinates[index + 4],
+                this.coordinates[index + 8],
+                this.coordinates[index + 12]];
+    };
+
+    // Returns the array of coordinates in the matrix
+    matrix4x4.prototype.coordinates = function () {
+        return this.coordinates;
+    };
+
+    matrix4x4.prototype.columnOrder = function () {
+        return this.columnAt(0).concat(
+               this.columnAt(1).concat(
+               this.columnAt(2).concat(
+               this.columnAt(3))));
+    };
+
+    return matrix4x4;
+
 })();
