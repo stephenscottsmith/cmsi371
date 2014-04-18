@@ -60,6 +60,8 @@ var Matrix4x4 = (function () {
 
 
     // HELPER FUNCTIONS & EXTRA PROPERTIES
+    
+    // Returns length of coordinates array, should be 16
     matrix4x4.prototype.dimensions = function () {
         return this.coordinates.length;
     };
@@ -86,11 +88,7 @@ var Matrix4x4 = (function () {
 
     
 
-    // Returns length of the coordinates array
-    // in the matrix (should be 16)
-    matrix4x4.prototype.dimensions = function () {
-        return this.coordinates.length;
-    };
+
 
     // Returns the array of coordinates in the matrix
     matrix4x4.prototype.coordinates = function () {
@@ -137,25 +135,13 @@ var Matrix4x4 = (function () {
 
         // GL expects its matrices in column major order.
         return [
-            (x2 * oneMinusC) + c,
-            (xy * oneMinusC) + zs,
-            (xz * oneMinusC) - ys,
-            0.0,
+            (x2 * oneMinusC) + c, (xy * oneMinusC) + zs, (xz * oneMinusC) - ys, 0.0,
 
-            (xy * oneMinusC) - zs,
-            (y2 * oneMinusC) + c,
-            (yz * oneMinusC) + xs,
-            0.0,
+            (xy * oneMinusC) - zs, (y2 * oneMinusC) + c, (yz * oneMinusC) + xs, 0.0,
 
-            (xz * oneMinusC) + ys,
-            (yz * oneMinusC) - xs,
-            (z2 * oneMinusC) + c,
-            0.0,
+            (xz * oneMinusC) + ys, (yz * oneMinusC) - xs, (z2 * oneMinusC) + c, 0.0,
 
-            0.0,
-            0.0,
-            0.0,
-            1.0
+            0.0, 0.0, 0.0, 1.0
         ];
     },
 
