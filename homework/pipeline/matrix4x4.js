@@ -19,7 +19,8 @@ var Matrix4x4 = (function () {
             rows = 4,
             columns = 4;
 
-        // Dimensionality check.
+        // Check to make sure they are both matrice's that have 
+        // the same 4x4 dimensions
         checkDimensions(this, matrix);
 
         for (i = 0; i < rows; i += 1) {
@@ -35,6 +36,23 @@ var Matrix4x4 = (function () {
         return result;
     };
 
+    var matrix4x4.getTranslationMatrix = function (tx, ty, tz) {
+        return new matrix4x4(
+            1, 0, 0, tx,
+            0, 1, 0, ty,
+            0, 0, 1, tz,
+            0, 0, 0, 1
+        );
+    };
+
+    matrix4x4.getScaleMatrix = function (sx, sy, sz) {
+        return new Matrix4x4(
+            sx,  0,  0, 0,
+             0, sy,  0, 0,
+             0,  0, sz, 0,
+             0,  0,  0, 1
+        );
+    };
 
 
 
@@ -66,14 +84,7 @@ var Matrix4x4 = (function () {
 
 
 
-    var matrix4x4.getTranslationMatrix = function (tx, ty, tz) {
-        return new matrix4x4(
-            1, 0, 0, tx,
-            0, 1, 0, ty,
-            0, 0, 1, tz,
-            0, 0, 0, 1
-        );
-    };
+    
 
     // Returns length of the coordinates array
     // in the matrix (should be 16)
