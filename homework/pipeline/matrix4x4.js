@@ -1,5 +1,94 @@
-var matrix4x4 = function () {
-	var getRotationMatrix = function (angle, x, y, z) {
+
+var Matrix4x4 = (function () {
+	
+    // constructor
+    var matrix4x4 = function () {
+        this.coordinates = arguments.length ? [].slice.call(arguments) : 
+               [1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0
+                0, 0, 0, 1];
+    };
+
+    matrix4x4.prototype.multiply = function (matrix) {
+        var result = new Matrix4x4(),
+            i,
+            j,
+            k,
+            sum,
+            rows = 4,
+            columns = 4;
+
+        // Dimensionality check.
+        checkDimensions(this, matrix);
+
+        for (i = 0; i < rows; i += 1) {
+            for (j = 0; j < columns; j += 1) {
+                sum = 0;
+                for (k = 0; k < rows; k += 1) {
+                    sum += this.coordinateAt((i * 4) + k) * matrix.coordinateAt((k * 4) + j); 
+                }
+                result.coordinates[(i * 4) + j] = sum;
+            }
+        }
+        
+        return result;
+    };
+
+
+
+
+
+
+
+    // HELPER FUNCTIONS & EXTRA PROPERTIES
+    matrix4x4.prototype.dimensions = function () {
+        return this.coordinates.length;
+    };
+
+    var checkDimensions = function(matrix1, matrix2) {
+        if (matrix1.dimensions() !== matrix2. dimensions()) {
+            throw "Matrices have different dimensions";
+        }
+    };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    var matrix4x4.getTranslationMatrix = function (tx, ty, tz) {
+        return new matrix4x4(
+            1, 0, 0, tx,
+            0, 1, 0, ty,
+            0, 0, 1, tz,
+            0, 0, 0, 1
+        );
+    };
+
+    // Returns length of the coordinates array
+    // in the matrix (should be 16)
+    matrix4x4.prototype.dimensions = function () {
+        return this.coordinates.length;
+    };
+
+    // Returns the array of coordinates in the matrix
+    matrix4x4.prototype.coordinates = function () {
+        return this.coordinates;
+    }
+
+
+
+    var getRotationMatrix = function (angle, x, y, z) {
         // In production code, this function should be associated
         // with a matrix object with associated functions.
         var axisLength = Math.sqrt((x * x) + (y * y) + (z * z)),
@@ -86,4 +175,4 @@ var matrix4x4 = function () {
                 1.0
             ];
         };
-}
+})();
