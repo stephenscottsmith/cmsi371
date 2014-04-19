@@ -3,11 +3,12 @@ var Matrix4x4 = (function () {
 	
     // constructor
     var matrix4x4 = function () {
-        this.coordinates = arguments.length ? [].slice.call(arguments) : 
-               [1, 0, 0, 0,
-                0, 1, 0, 0,
-                0, 0, 1, 0
-                0, 0, 0, 1];
+        this.coordinates = arguments.length ?
+            [].slice.call(arguments) :
+            [1, 0, 0, 0,
+             0, 1, 0, 0,
+             0, 0, 1, 0,
+             0, 0, 0, 1];
     };
 
     matrix4x4.prototype.multiply = function (matrix) {
@@ -36,7 +37,7 @@ var Matrix4x4 = (function () {
         return result;
     };
 
-    var matrix4x4.getTranslationMatrix = function (tx, ty, tz) {
+    matrix4x4.getTranslationMatrix = function (tx, ty, tz) {
         return new matrix4x4(
             1, 0, 0, tx,
             0, 1, 0, ty,
@@ -54,7 +55,7 @@ var Matrix4x4 = (function () {
         );
     };
 
-    var getRotationMatrix = function (angle, x, y, z) {
+    matrix4x4.getRotationMatrix = function (angle, x, y, z) {
         // In production code, this function should be associated
         // with a matrix object with associated functions.
         var axisLength = Math.sqrt((x * x) + (y * y) + (z * z)),
