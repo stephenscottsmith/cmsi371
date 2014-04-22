@@ -56,15 +56,12 @@ var Matrix4x4 = (function () {
     };
 
     matrix4x4.getRotationMatrix = function (angle, x, y, z) {
-        // In production code, this function should be associated
-        // with a matrix object with associated functions.
         var axisLength = Math.sqrt((x * x) + (y * y) + (z * z)),
             s = Math.sin(angle * Math.PI / 180.0),
             c = Math.cos(angle * Math.PI / 180.0),
             oneMinusC = 1.0 - c,
 
-            // We can't calculate this until we have normalized
-            // the axis vector of rotation.
+            
             x2, // "2" for "squared."
             y2,
             z2,
@@ -75,12 +72,10 @@ var Matrix4x4 = (function () {
             ys,
             zs;
 
-        // Normalize the axis vector of rotation.
         x /= axisLength;
         y /= axisLength;
         z /= axisLength;
 
-        // *Now* we can calculate the other terms.
         x2 = x * x;
         y2 = y * y;
         z2 = z * z;
@@ -91,16 +86,12 @@ var Matrix4x4 = (function () {
         ys = y * s;
         zs = z * s;
 
-        // GL expects its matrices in column major order.
-        return [
-            (x2 * oneMinusC) + c, (xy * oneMinusC) + zs, (xz * oneMinusC) - ys, 0.0,
-
-            (xy * oneMinusC) - zs, (y2 * oneMinusC) + c, (yz * oneMinusC) + xs, 0.0,
-
-            (xz * oneMinusC) + ys, (yz * oneMinusC) - xs, (z2 * oneMinusC) + c, 0.0,
-
-            0.0, 0.0, 0.0, 1.0
-        ];
+        return new Matrix4x4(
+             (x2 * oneMinusC) + c, (xy * oneMinusC) - zs, (xz * oneMinusC) + ys, 0.0,
+            (xy * oneMinusC) + zs,  (y2 * oneMinusC) + c, (yz * oneMinusC) - xs, 0.0,
+            (xz * oneMinusC) - ys, (yz * oneMinusC) + xs,  (z2 * oneMinusC) + c, 0.0,
+                              0.0,                   0.0,                   0.0, 1.0
+        );
     };
 
     matrix4x4.getOrthoMatrix = function (left, right, bottom, top, near, far) {
@@ -165,7 +156,7 @@ var Matrix4x4 = (function () {
         }
     };
 
-    matrix4x4.prototype.coordinateAt = function (index) {
+    matrix4x4.prototype.coordinateAt  = function (index) {
         if (index < 0 || index > 15) {
             throw "Index out of bounds";
         }

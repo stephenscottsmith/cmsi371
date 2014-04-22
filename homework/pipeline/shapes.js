@@ -248,4 +248,62 @@ var Shapes = {
         return result;
     }
 
+    toNormalArray: function (indexedVertices) {
+        var result = [],
+            i,
+            j,
+            maxi,
+            maxj,
+            p0,
+            p1,
+            p2,
+            v0,
+            v1,
+            v2,
+            normal;
+
+        for (i = 0, maxi = indexedVertices.indices.length; i < maxi; i += 1) {
+            p0 = indexedVertices.vertices[indexedVertices.indices[i][0]];
+            p1 = indexedVertices.vertices[indexedVertices.indices[i][1]];
+            p2 = indexedVertices.vertices[indexedVertices.indices[i][2]];
+
+            v0 = new Vector(p0[0], p0[1], p0[2]);
+            v1 = new Vector(p1[0], p1[1], p1[2]).subtract(v0);
+            v2 = new Vector(p2[0], p2[1], p2[2]).subtract(v0);
+            normal = v1.cross(v2).unit();
+
+            for (j = 0, maxj = indexedVertices.indices[i].length; j < maxj; j += 1) {
+                result = result.concat(
+                    [ normal.x(), normal.y(), normal.z() ]
+                );
+            }
+        }
+
+        return result;
+    },
+
+    toVertexNormalArray: function (indexedVertices) {
+        var result = [],
+            i,
+            j,
+            maxi,
+            maxj,
+            p,
+            normal;
+
+        // For each face...
+        for (i = 0, maxi = indexedVertices.indices.length; i < maxi; i += 1) {
+            // For each vertex in that face...
+            for (j = 0, maxj = indexedVertices.indices[i].length; j < maxj; j += 1) {
+                p = indexedVertices.vertices[indexedVertices.indices[i][j]];
+                normal = new Vector(p[0], p[1], p[2]).unit();
+                result = result.concat(
+                    [ normal.x(), normal.y(), normal.z() ]
+                );
+            }
+        }
+
+        return result;
+    }
+
 };
