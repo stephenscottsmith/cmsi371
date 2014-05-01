@@ -93,6 +93,9 @@ var Shapes = {
         // var startX = initialPosition[0],
         //     startY = initialPosition[1],
         //     startZ = initialPosition[2];
+
+        // JD: I'd say there are enough variables here that you can break
+        //     things up into multiple lines now.
         var x = 0, y = 0, z = 0, l = 0.5, midX = ((x + l) / 2), midZ = ((z + l) / 2);
 
         return {
@@ -246,7 +249,7 @@ var Shapes = {
         }
 
         return result;
-    }
+    } // JD: <---- Duuuuuuude COMMMMA!
 
     toNormalArray: function (indexedVertices) {
         var result = [],
