@@ -279,6 +279,8 @@
         gl.bindBuffer(gl.ARRAY_BUFFER, object.buffer);
         gl.vertexAttribPointer(vertexPosition, 3, gl.FLOAT, false, 0, 0);
         gl.drawArrays(object.mode, 0, object.vertices.length / 3);
+
+        // JD: Yikes, not a sign of shape group functionality at all!
     };
 
     /*
