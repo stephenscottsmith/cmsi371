@@ -40,6 +40,8 @@
         j,
         maxj,
 
+        createVertices,
+
         /*
          * This code does not really belong here: it should live
          * in a separate library of matrix and transformation
@@ -203,6 +205,42 @@
         // }
 
     ];
+
+    createVertices = function (objectsToDraw) {
+        // Redeclaration of i necessary for recursiveness.
+        var i;
+        
+        for (i = 0; i < objectsToDraw.length; i += 1) {
+            objectsToDraw[i].buffer = GLSLUtilities.initVertexBuffer(gl,
+                    objectsToDraw[i].vertices);
+
+            if (!objectsToDraw[i].colors) {
+                // If we have a single color, we expand that into an array
+                // of the same color over and over.
+                objectsToDraw[i].colors = [];
+                for (j = 0, maxj = objectsToDraw[i].vertices.length / 3;
+                        j < maxj; j += 1) {
+                    objectsToDraw[i].colors = objectsToDraw[i].colors.concat(
+                        objectsToDraw[i].color.r,
+                        objectsToDraw[i].color.g,
+                        objectsToDraw[i].color.b
+                    );
+                }
+            }
+
+            // Normal buffer.
+            objectsToDraw[i].normalBuffer = GLSLUtilities.initVertexBuffer(gl,
+                    objectsToDraw[i].normals);
+
+            // Color buffer.
+            objectsToDraw[i].colorBuffer = GLSLUtilities.initVertexBuffer(gl,
+                    objectsToDraw[i].colors);
+
+            if (objectsToDraw[i].children && (objectsToDraw[i].children.length !== 0)) {
+                vertexify(objectsToDraw[i].children);
+            }
+        }
+    };  
 
     // Pass the vertices to WebGL.
     for (i = 0, maxi = objectsToDraw.length; i < maxi; i += 1) {
