@@ -21,7 +21,10 @@
         // Important state variables.
         currentRotation = 0.0,
         currentInterval,
+        projectionMatrix,
+        transformMatrix,
         rotationMatrix,
+        cameraMatrix,
         vertexPosition,
         vertexColor,
 
@@ -121,7 +124,7 @@
     gl.enable(gl.DEPTH_TEST);
     gl.clearColor(0.0, 0.0, 0.0, 0.0);
     gl.viewport(0, 0, canvas.width, canvas.height);
-
+    
     // Build the objects to display.
     objectsToDraw = [
         // {
@@ -193,11 +196,11 @@
         //     mode: gl.TRIANGLES
         // },
 
-        {
-          color: { r: 0.3, g: 0.3, b: 0.8 },
-          vertices: Shapes.toRawTriangleArray(Shapes.hemisphere(0.5)),
-          mode: gl.TRIANGLES
-        }
+        // {
+        //   color: { r: 0.3, g: 0.3, b: 0.8 },
+        //   vertices: Shapes.toRawLineArray(Shapes.hemisphere(0.5)),
+        //   mode: gl.LINES
+        // }
 
     ];
 
@@ -259,17 +262,24 @@
     gl.enableVertexAttribArray(vertexColor);
     rotationMatrix = gl.getUniformLocation(shaderProgram, "rotationMatrix");
 
+
+    projectionMatrix = gl.getUniformLocation(shaderProgram, "projectionMatrix");
+    cameraMatrix = gl.getUniformLocation(shaderProgram, "cameraMatrix");
+    transformMatrix = gl.getUniformLocation(shaderProgram, "transformMatrix");
+    xRotationMatrix = gl.getUniformLocation(shaderProgram, "xRotationMatrix");
+    yRotationMatrix = gl.getUniformLocation(shaderProgram, "yRotationMatrix");
+
+    // Note the additional variables.
+    lightPosition = gl.getUniformLocation(shaderProgram, "lightPosition");
+    lightDiffuse = gl.getUniformLocation(shaderProgram, "lightDiffuse");
+ 
     /*
      * Displays an individual object.
      */
     drawObject = function (object) {
-        // Check to see if the object has a children property
-        // if so, recurse
-        if (object.hasOwnProperty('children') && object.children.length > 0) {
-            for (var i = 0; i < object.children.length; i++) {
-                drawObject(children[i]);
-            }
-        }
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, objectsToDraw[i].normalBuffer);
+
 
         // Set the varying colors.
         gl.bindBuffer(gl.ARRAY_BUFFER, object.colorBuffer);
@@ -281,6 +291,10 @@
         gl.drawArrays(object.mode, 0, object.vertices.length / 3);
 
         // JD: Yikes, not a sign of shape group functionality at all!
+        if (objectsToDraw[i].children && (objectsToDraw[i].children.length !== 0)) {
+                inheritedTransforms = objectsToDraw[i].transforms;
+                drawObjects(objectsToDraw[i].children, inheritedTransforms);
+        }
     };
 
     /*
@@ -303,7 +317,7 @@
     };
 
     // Draw the initial scene.
-    drawScene();
+    //drawScene();
 
     // Set up the rotation toggle: clicking on the canvas does it.
     $(canvas).click(function () {
@@ -320,5 +334,56 @@
             }, 30);
         }
     });
+
+    $("#add").click(function (canvas) {
+        var shapeToDraw = $('option:selected').val();
+            red = parseFloat($('#red').val(), 10),
+            green = parseFloat($('#green').val(), 10),
+            blue = parseFloat($('#blue').val(), 10);
+            console.log(red + ", " + green + ", " + blue);
+
+        if (shapeToDraw === "Cube") {
+            objectsToDraw.push({
+                color: { r: red, g: green, b: blue },
+                vertices: Shapes.toRawLineArray(Shapes.cube()),
+                mode: gl.LINES
+            });
+        } else if (shapeToDraw === "Pyramid") {
+            objectsToDraw.push({
+                color: { r: red, g: green, b: blue },
+                vertices: Shapes.toRawLineArray(Shapes.pyramid()),
+                mode: gl.LINES
+            });
+        } else if (shapeToDraw === "Icosahedron") {
+            objectsToDraw.push({
+                color: { r: red, g: green, b: blue },
+                vertices: Shapes.toRawLineArray(Shapes.icosahedron()),
+                mode: gl.LINES
+            });
+        } else if (shapeToDraw === "Sphere") {
+            objectsToDraw.push({
+                color: { r: red, g: green, b: blue },
+                vertices: Shapes.toRawLineArray(Shapes.hemisphere(0.5)),
+                mode: gl.LINES
+            });
+        }
+        objectsToDraw.push(        {
+          color: { r: 0.3, g: 0.3, b: 0.8 },
+          vertices: Shapes.toRawLineArray(Shapes.hemisphere(0.5)),
+          mode: gl.LINES
+        });
+
+        drawScene();
+
+    });
+    
+
+
+
+
+
+
+
+
 
 }(document.getElementById("hello-webgl")));

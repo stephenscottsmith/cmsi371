@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8"/>
         <title>Hello WebGL (again)</title>
-        <link rel="stylesheet" href="hello-webgl-again.css" />
+        <link rel="stylesheet" href="scene.css" />
     </head>
     <body>
         <h1>Hello WebGL (again)!</h1>
@@ -21,6 +21,21 @@
             Sorry, your web browser does not appear to support
             the <code>canvas</code> element, either.
         </canvas>
+        <div id="inspector">
+            <select id="shapes">
+                <option value="Cube">Cube</option>
+                <option value="Pyramid">Pyramid</option>
+                <option value="Icosahedron">Icosahedron</option>
+                <option value="Sphere">Sphere</option>
+            </select>
+            <label>Red:</label>
+            <input id="red" type="number" min="0.0" max="1.0" step="0.01" value="1.0">
+            <label>Green:</label>
+            <input id="green" type="number" min="0.0" max="1.0" step="0.01" value="1.0">
+            <label>Blue:</label>
+            <input id="blue" type="number" min="0.0" max="1.0" step="0.01" value="1.0">
+            <button id="add">Add Shape</button>
+        </div>
 
         <!-- jQuery makes some things more convenient. -->
         <script src="http://code.jquery.com/jquery-latest.min.js"></script>
@@ -31,6 +46,8 @@
 
         <!-- Shapes is a library that generates "canned" shapes. -->
         <script src="shapes.js"></script>
+
+        <script src="matrix4x4/matrix4x4.js"></script>
 
         <!-- Set up shaders: we've placed the source in script elements for
             simplicity.  Shaders are ideally kept in separate files for easier
@@ -73,6 +90,6 @@
         </script>
 
         <!-- This script sets up the specific scene for this page. -->
-        <script src="hello-webgl-again.js"></script>
+        <script src="scene.js"></script>
   </body>
 </html>
