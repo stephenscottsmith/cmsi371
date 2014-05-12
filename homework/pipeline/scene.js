@@ -51,6 +51,7 @@
          * Based on the original glRotate reference:
          *     http://www.opengl.org/sdk/docs/man/xhtml/glRotate.xml
          */
+        // JD: This has been ported, so clean it up, clean it up!
         getRotationMatrix = function (angle, x, y, z) {
             // In production code, this function should be associated
             // with a matrix object with associated functions.
@@ -243,6 +244,8 @@
     };  
 
     // Pass the vertices to WebGL.
+    // JD: Uhhhhh...this looks redundant to createVertices above.  More clean-up
+    //     called for, it appears.
     for (i = 0, maxi = objectsToDraw.length; i < maxi; i += 1) {
         objectsToDraw[i].buffer = GLSLUtilities.initVertexBuffer(gl,
                 objectsToDraw[i].vertices);
@@ -300,7 +303,7 @@
     gl.enableVertexAttribArray(vertexColor);
     rotationMatrix = gl.getUniformLocation(shaderProgram, "rotationMatrix");
 
-
+    // JD: Use it or lose it buddy...
     projectionMatrix = gl.getUniformLocation(shaderProgram, "projectionMatrix");
     cameraMatrix = gl.getUniformLocation(shaderProgram, "cameraMatrix");
     transformMatrix = gl.getUniformLocation(shaderProgram, "transformMatrix");
@@ -328,7 +331,11 @@
         gl.vertexAttribPointer(vertexPosition, 3, gl.FLOAT, false, 0, 0);
         gl.drawArrays(object.mode, 0, object.vertices.length / 3);
 
+        // JD: Instance transform code would go here...somewhat surprising it isn't
+        //     here, actually, because your code support seems to be ready to go.
+
         // JD: Yikes, not a sign of shape group functionality at all!
+        // JD2: OK, I see it here.  I'll have to look at this later.
         if (objectsToDraw[i].children && (objectsToDraw[i].children.length !== 0)) {
                 inheritedTransforms = objectsToDraw[i].transforms;
                 drawObjects(objectsToDraw[i].children, inheritedTransforms);
@@ -380,6 +387,13 @@
             blue = parseFloat($('#blue').val(), 10);
             console.log(red + ", " + green + ", " + blue);
 
+        // JD: Nice that you are doing this, but you are missing something.  Hint:
+        //     Compare the way objectsToDraw is set up in the sample code (or even
+        //     your code before) to what this is doing.  Something is missing here.
+        //
+        //     Hint #2: Look at your scene objects in the prior, "pre-existing objects"
+        //     implementation, and compare those to these added scene objects .  Spot
+        //     the difference.  By "look at," I mean console.log.
         if (shapeToDraw === "Cube") {
             objectsToDraw.push({
                 color: { r: red, g: green, b: blue },

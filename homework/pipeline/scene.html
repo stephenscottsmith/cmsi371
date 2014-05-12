@@ -68,6 +68,8 @@
             uniform mat4 rotationMatrix;
 
             void main(void) {
+                // JD: Instance transformation and projection matrices should
+                //     go here, eventually. -----V
                 gl_Position = rotationMatrix * vec4(vertexPosition, 1.0);
                 finalVertexColor = vec4(vertexColor, 1.0);
             }

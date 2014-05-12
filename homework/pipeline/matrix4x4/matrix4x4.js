@@ -202,6 +202,10 @@ var Matrix4x4 = (function () {
         );
     };
 
+    // JD: Nice idea---through strictly speaking this should be the *instance*
+    //     transform matrix because it deals specifically with one rotation,
+    //     one translation, and one scale.  Also, do make sure that the order
+    //     of multiplication is the way you intend.
     matrix4x4.getTransformMatrix = function (transforms) {
         var translate = new Matrix4x4(),
             scale = new Matrix4x4(),
