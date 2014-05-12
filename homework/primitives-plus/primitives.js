@@ -308,104 +308,48 @@ var Primitives = {
      * permutations of that eighth's coordinates.  So we define a helper
      * function that all of the circle implementations will use...
      */
-    plotCirclePoints: function (context, xc, yc, x, y, color1, color2) {
-        //color1 = color1 || [0, 0, 0];
-        
+    plotCirclePoints: function (context, xc, yc, x, y, r, color1, color2) {
+        color1 = color1 || [0, 0, 0];
+        color2 = color2 || [0, 0, 0];
+        var redDifference = (color2[0] - color1[0]) / (2 * r),
+            greenDifference = (color2[1] - color1[1]) / (2 * r),
+            blueDifference = (color2[2] - color1[2]) / (2 * r),
+            color,
+            i = x,
+            j = y;
 
-        // var fillCircle = function (context, minX, maxX, minY, maxY, halfway, color1, color2) {
-        //     console.log(1);
-        //     var netX = maxX - minX;
-        //     var redAverage = Math.ceil(color1[0] + color2[0]) / netX;
-        //     var greenAverage = Math.ceil(color1[1] + color2[1]) / netX;
-        //     var blueAverage = Math.ceil(color1[2] + color2[2]) / netX;
-        //     //alert("red: " + redAverage + "\ngreen: " + greenAverage + "\nblue: " + blueAverage);
+        do {
+            color = [color1[0] + redDifference * (Math.floor(yc + y) - (yc - r)), color1[1] +
+                greenDifference * (Math.floor(yc + y) - (yc - r)), color1[2] +
+                blueDifference * (Math.floor(yc + y) - (yc - r))];
 
-        //     for (var i = minX; i <= maxX; i++) {
-        //         for (var j = minY; j <= maxY; j++) {
-        //             // if (i <= halfway) {
-        //                 Primitives.setPixel(context, i, j, color1[0], color1[1], color1[2]);
-                        
-        //             // } else {
-        //             //     Primitives.setPixel(context, i, j, color2[0], color2[1], color2[2]);
-        //             //     //console.log(2);
-        //             // }
+            this.setPixel(context, Math.floor(xc + i), Math.floor(yc + y), color[0], color[1], color[2]);
+            this.setPixel(context, Math.floor(xc - i), Math.floor(yc + y), color[0], color[1], color[2]);
 
-        //         }
-        //         // alert("color1[0]: " + color1[0]);
-        //         // alert("deltas[0]: " + deltas[0]);
-        //         color1[0] += redAverage;
-        //         color1[1] += greenAverage;
-        //         color1[2] += blueAverage;
-        //         // alert("color1[0]: " + color1[0]);
-        //         // alert("deltas[0]: " + deltas[0]);
+            color = [color1[0] + redDifference * (Math.floor(yc - y) - (yc - r)), color1[1] +
+                greenDifference * (Math.floor(yc - y) - (yc - r)), color1[2] +
+                blueDifference * (Math.floor(yc - y) - (yc - r))];
+            this.setPixel(context, Math.floor(xc + i), Math.floor(yc - y), color[0], color[1], color[2]);
+            this.setPixel(context, Math.floor(xc - i), Math.floor(yc - y), color[0], color[1], color[2]);
 
-        //     }
-        // };
-        // console.log("xc: " + xc + "\nx: " + x + "\nyc: " + yc + "\ny: " + y);
-        // This draws the outer quarters of the circle
-        var maxX = xc + x;
-        var minX = xc - x;
-        var netX = maxX - minX;
-        var maxY = yc + y;
-        var minY = yc - y;
+            do {
+                color = [color1[0] + redDifference * (Math.floor(yc + i) - (yc - r)), color1[1] +
+                    greenDifference * (Math.floor(yc + i) - (yc - r)), color1[2] +
+                    blueDifference * (Math.floor(yc + i) - (yc - r))];
 
-        // JD: OK, at least you're filling the circle.  You just need to
-        //     figure out how to grade those colors.
-        for (var i = xc; i <= xc + x; i++) {
-            for (var j = minY; j <= maxY; j++) {
-                this.setPixel(context, i, j, color1[0], color1[1], color1[2]);
-            }
-        }
-        for (var i = xc - x; i <= xc; i++) {
-            for (var j = minY; j <= maxY; j++) {
-                this.setPixel(context, i, j, color2[0], color2[1], color2[2]);
-            }
-        }
+                this.setPixel(context, Math.floor(xc + j), Math.floor(yc + i), color[0], color[1], color[2]);
+                this.setPixel(context, Math.floor(xc - j), Math.floor(yc + i), color[0], color[1], color[2]);
 
-        var maxY = yc + x;
-        var minY = yc - x;
-        var halfway = (maxX + minX) / 2;
-        Primitives.fillCircle(context, minX, maxX, minY, maxY, halfway, color1, color2);
+                color = [color1[0] + redDifference * (Math.floor(yc - i) - (yc - r)), color1[1] +
+                    greenDifference * (Math.floor(yc - i) - (yc - r)), color1[2] +
+                    blueDifference * (Math.floor(yc - i) - (yc - r))];
 
-        
-        for (var i = xc - y; i <= xc; i++) {
-            for (var j = minY; j <= maxY; j++) {
-                this.setPixel(context, i, j, color1[0], color1[1], color1[2]);
-            }
-        }
-
-        
-        // this.setPixel(context, xc + x, yc + y, color1[0], color1[1], color1[2]);
-        // this.setPixel(context, xc + x, yc - y, color1[0], color1[1], color1[2]);
-        // this.setPixel(context, xc + y, yc + x, color1[0], color1[1], color1[2]);
-        // this.setPixel(context, xc + y, yc - x, color1[0], color1[1], color1[2]);
-
-        // if (color2 === undefined) {
-        //     this.setPixel(context, xc - x, yc + y, color1[0], color1[1], color1[2]);
-        //     this.setPixel(context, xc - x, yc - y, color1[0], color1[1], color1[2]);
-        //     this.setPixel(context, xc - y, yc + x, color1[0], color1[1], color1[2]);
-        //     this.setPixel(context, xc - y, yc - x, color1[0], color1[1], color1[2]);
-        // } else {
-        //     color2 = color2 || [0, 0, 0];
-        //     this.setPixel(context, xc - x, yc + y, color2[0], color2[1], color2[2]);
-        //     this.setPixel(context, xc - x, yc - y, color2[0], color2[1], color2[2]);
-        //     this.setPixel(context, xc - y, yc + x, color2[0], color2[1], color2[2]);
-        //     this.setPixel(context, xc - y, yc - x, color2[0], color2[1], color2[2]);
-
-
-        //     // for (var i = x; i <= xc; i++) {
-        //     //     alert("shit");
-        //     //     for (var j = yc - y; j <= yc + y; j++) {
-        //     //         this.setPixel(context, x, y, color2[0], color2[1], color2[2]);
-        //     //     }
-                
-        // }
-            // leftColor = color1 ? [color1[0], color1[1], color1[2]] : color1,
-            // rightColor = color2 ? [color2[0], color2[1], color2[2]] : color2,
-            // leftVDelta,
-            // rightVDelta,
-            // hDelta,
-
+                this.setPixel(context, Math.floor(xc + j), Math.floor(yc - i), color[0], color[1], color[2]);
+                this.setPixel(context, Math.floor(xc - j), Math.floor(yc - i), color[0], color[1], color[2]);
+                j -=1;
+            } while (j > -1);
+            i -= 1;
+        } while (i > -1);
     },
 
     // First, the most naive possible implementation: circle by trigonometry.
@@ -421,7 +365,7 @@ var Primitives = {
             y = 0;
 
         while (x >= y) {
-            this.plotCirclePoints(context, xc, yc, x, y, color);
+            this.plotCirclePoints(context, xc, yc, x, y, r, color);
             x = x * c - y * s;
             y = x * s + y * c;
         }
@@ -434,7 +378,7 @@ var Primitives = {
             y = 0;
 
         while (x >= y) {
-            this.plotCirclePoints(context, xc, yc, x, y, color);
+            this.plotCirclePoints(context, xc, yc, x, y, r, color);
             x = x - (epsilon * y);
             y = y + (epsilon * x);
         }
@@ -447,7 +391,7 @@ var Primitives = {
             y = r;
 
         while (x < y) {
-            this.plotCirclePoints(context, xc, yc, x, y, color);
+            this.plotCirclePoints(context, xc, yc, x, y, r, color);
             if (p < 0) {
                 p = p + 4 * x + 6;
             } else {
@@ -457,7 +401,7 @@ var Primitives = {
             x += 1;
         }
         if (x === y) {
-            this.plotCirclePoints(context, xc, yc, x, y, color);
+            this.plotCirclePoints(context, xc, yc, x, y, r, color);
         }
     },
 
@@ -470,7 +414,7 @@ var Primitives = {
             v = e - r;
 
         while (x <= y) {
-            this.plotCirclePoints(context, xc, yc, x, y, color);
+            this.plotCirclePoints(context, xc, yc, x, y, r, color);
             if (e < 0) {
                 x += 1;
                 u += 2;
@@ -493,7 +437,7 @@ var Primitives = {
             e = 0;
 
         while (y <= x) {
-            this.plotCirclePoints(context, xc, yc, x, y, color1, color2);
+            this.plotCirclePoints(context, xc, yc, x, y, r, color1, color2);
             y += 1;
             e += (2 * y - 1);
             if (e > x) {
