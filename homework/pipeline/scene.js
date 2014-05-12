@@ -39,78 +39,12 @@
         maxi,
         j,
         maxj,
+        isRotating = false,
+        currentXRotation = 0,
+        currentYRotation = 0,
 
         createVertices,
 
-        /*
-         * This code does not really belong here: it should live
-         * in a separate library of matrix and transformation
-         * functions.  It is here only to show you how matrices
-         * can be used with GLSL.
-         *
-         * Based on the original glRotate reference:
-         *     http://www.opengl.org/sdk/docs/man/xhtml/glRotate.xml
-         */
-        // JD: This has been ported, so clean it up, clean it up!
-        getRotationMatrix = function (angle, x, y, z) {
-            // In production code, this function should be associated
-            // with a matrix object with associated functions.
-            var axisLength = Math.sqrt((x * x) + (y * y) + (z * z)),
-                s = Math.sin(angle * Math.PI / 180.0),
-                c = Math.cos(angle * Math.PI / 180.0),
-                oneMinusC = 1.0 - c,
-
-                // We can't calculate this until we have normalized
-                // the axis vector of rotation.
-                x2, // "2" for "squared."
-                y2,
-                z2,
-                xy,
-                yz,
-                xz,
-                xs,
-                ys,
-                zs;
-
-            // Normalize the axis vector of rotation.
-            x /= axisLength;
-            y /= axisLength;
-            z /= axisLength;
-
-            // *Now* we can calculate the other terms.
-            x2 = x * x;
-            y2 = y * y;
-            z2 = z * z;
-            xy = x * y;
-            yz = y * z;
-            xz = x * z;
-            xs = x * s;
-            ys = y * s;
-            zs = z * s;
-
-            // GL expects its matrices in column major order.
-            return [
-                (x2 * oneMinusC) + c,
-                (xy * oneMinusC) + zs,
-                (xz * oneMinusC) - ys,
-                0.0,
-
-                (xy * oneMinusC) - zs,
-                (y2 * oneMinusC) + c,
-                (yz * oneMinusC) + xs,
-                0.0,
-
-                (xz * oneMinusC) + ys,
-                (yz * oneMinusC) - xs,
-                (z2 * oneMinusC) + c,
-                0.0,
-
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ];
-        };
 
     // Grab the WebGL rendering context.
     gl = GLSLUtilities.getGL(canvas);
@@ -243,30 +177,6 @@
         }
     };  
 
-    // Pass the vertices to WebGL.
-    // JD: Uhhhhh...this looks redundant to createVertices above.  More clean-up
-    //     called for, it appears.
-    for (i = 0, maxi = objectsToDraw.length; i < maxi; i += 1) {
-        objectsToDraw[i].buffer = GLSLUtilities.initVertexBuffer(gl,
-                objectsToDraw[i].vertices);
-
-        if (!objectsToDraw[i].colors) {
-            // If we have a single color, we expand that into an array
-            // of the same color over and over.
-            objectsToDraw[i].colors = [];
-            for (j = 0, maxj = objectsToDraw[i].vertices.length / 3;
-                    j < maxj; j += 1) {
-                objectsToDraw[i].colors = objectsToDraw[i].colors.concat(
-                    objectsToDraw[i].color.r,
-                    objectsToDraw[i].color.g,
-                    objectsToDraw[i].color.b
-                );
-            }
-        }
-        objectsToDraw[i].colorBuffer = GLSLUtilities.initVertexBuffer(gl,
-                objectsToDraw[i].colors);
-    }
-
     // Initialize the shaders.
     shaderProgram = GLSLUtilities.initSimpleShaderProgram(
         gl,
@@ -302,6 +212,8 @@
     vertexColor = gl.getAttribLocation(shaderProgram, "vertexColor");
     gl.enableVertexAttribArray(vertexColor);
     rotationMatrix = gl.getUniformLocation(shaderProgram, "rotationMatrix");
+    normalVector = gl.getAttribLocation(shaderProgram, "normalVector");
+    gl.enableVertexAttribArray(normalVector);
 
     // JD: Use it or lose it buddy...
     projectionMatrix = gl.getUniformLocation(shaderProgram, "projectionMatrix");
@@ -317,28 +229,51 @@
     /*
      * Displays an individual object.
      */
-    drawObject = function (object) {
+    drawObject = function (objectsToDraw, inheritedTransforms) {
 
-        gl.bindBuffer(gl.ARRAY_BUFFER, objectsToDraw[i].normalBuffer);
+        var i,
+            inheritedTransformMatrix = new Matrix4x4 ();
 
+        for (i = 0; i < objectsToDraw.length; i += 1) {
+            // This if statement check to see if the object that is about to be drawn has any transforms.
+            if (objectsToDraw[i].transforms) {
 
-        // Set the varying colors.
-        gl.bindBuffer(gl.ARRAY_BUFFER, object.colorBuffer);
-        gl.vertexAttribPointer(vertexColor, 3, gl.FLOAT, false, 0, 0);
+                // This if statement checks to see if the object's parents had any transforms.
+                // They will be multiplied through another matrix. If not, only the object's
+                // transforms are applied.
+                if (inheritedTransforms) {
+                    inheritedTransformMatrix = Matrix4x4.getTransformMatrix(inheritedTransforms).multiply(
+                            Matrix4x4.getTransformMatrix(objectsToDraw[i].transforms));
+                    gl.uniformMatrix4fv(transformMatrix, gl.FALSE, 
+                        new Float32Array(
+                            inheritedTransformMatrix.columnOrder()
+                        )
+                    );
+                } else {
+                    gl.uniformMatrix4fv(transformMatrix, gl.FALSE, 
+                        new Float32Array(
+                            Matrix4x4.getTransformMatrix(objectsToDraw[i].transforms).columnOrder()
+                        )
+                    );
+                }
+            }
+            // Set the varying normal vectors.
+            gl.bindBuffer(gl.ARRAY_BUFFER, objectsToDraw[i].normalBuffer);
+            gl.vertexAttribPointer(normalVector, 3, gl.FLOAT, false, 0, 0);
 
-        // Set the varying vertex coordinates.
-        gl.bindBuffer(gl.ARRAY_BUFFER, object.buffer);
-        gl.vertexAttribPointer(vertexPosition, 3, gl.FLOAT, false, 0, 0);
-        gl.drawArrays(object.mode, 0, object.vertices.length / 3);
+            // Set the varying colors.
+            gl.bindBuffer(gl.ARRAY_BUFFER, objectsToDraw[i].colorBuffer);
+            gl.vertexAttribPointer(vertexColor, 3, gl.FLOAT, false, 0, 0);
 
-        // JD: Instance transform code would go here...somewhat surprising it isn't
-        //     here, actually, because your code support seems to be ready to go.
+            // Set the varying vertex coordinates.
+            gl.bindBuffer(gl.ARRAY_BUFFER, objectsToDraw[i].buffer);
+            gl.vertexAttribPointer(vertexPosition, 3, gl.FLOAT, false, 0, 0);
+            gl.drawArrays(objectsToDraw[i].mode, 0, objectsToDraw[i].vertices.length / 3);
 
-        // JD: Yikes, not a sign of shape group functionality at all!
-        // JD2: OK, I see it here.  I'll have to look at this later.
-        if (objectsToDraw[i].children && (objectsToDraw[i].children.length !== 0)) {
+            if (objectsToDraw[i].children && (objectsToDraw[i].children.length !== 0)) {
                 inheritedTransforms = objectsToDraw[i].transforms;
                 drawObjects(objectsToDraw[i].children, inheritedTransforms);
+            }
         }
     };
 
@@ -349,20 +284,29 @@
         // Clear the display.
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-        // Set up the rotation matrix.
-        gl.uniformMatrix4fv(rotationMatrix, gl.FALSE, new Float32Array(getRotationMatrix(currentRotation, 0, 1, 0)));
+        // Set up the rotation matrix before we draw the objects.
+        gl.uniformMatrix4fv(xRotationMatrix, gl.FALSE,
+            new Float32Array(
+                Matrix4x4.getRotationMatrix(currentXRotation / 4, 1, 0, 0).getColumnMajorOrder()
+            )
+        );
 
+        // Set up the rotation matrix before we draw the objects.
+        gl.uniformMatrix4fv(yRotationMatrix, gl.FALSE,
+            new Float32Array(
+                Matrix4x4.getRotationMatrix(currentYRotation / 4, 0, 1, 0).getColumnMajorOrder()
+            )
+        );
+        
         // Display the objects.
-        for (i = 0, maxi = objectsToDraw.length; i < maxi; i += 1) {
-            drawObject(objectsToDraw[i]);
-        }
+        drawObject(objectsToDraw);
 
         // All done.
         gl.flush();
     };
 
     // Draw the initial scene.
-    //drawScene();
+    drawScene();
 
     // Set up the rotation toggle: clicking on the canvas does it.
     $(canvas).click(function () {
@@ -381,6 +325,7 @@
     });
 
     $("#add").click(function (canvas) {
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
         var shapeToDraw = $('option:selected').val();
             red = parseFloat($('#red').val(), 10),
             green = parseFloat($('#green').val(), 10),
@@ -395,15 +340,18 @@
         //     implementation, and compare those to these added scene objects .  Spot
         //     the difference.  By "look at," I mean console.log.
         if (shapeToDraw === "Cube") {
-            objectsToDraw.push({
-                color: { r: red, g: green, b: blue },
-                vertices: Shapes.toRawLineArray(Shapes.cube()),
-                mode: gl.LINES
-            });
+            var cube = {};
+            cube.color = {};
+            cube.color.r = red;
+            cube.color.g = green;
+            cube.color.b = blue;
+            cube.vertices = Shapes.toRawLineArray(Shapes.cube());
+            cube.mode = gl.LINES;
+            objectsToDraw.push(cube);
         } else if (shapeToDraw === "Pyramid") {
             objectsToDraw.push({
                 color: { r: red, g: green, b: blue },
-                vertices: Shapes.toRawLineArray(Shapes.pyramid()),
+                vertices: Shapes.toRawLineArray(Shapes.perfectPyramid()),
                 mode: gl.LINES
             });
         } else if (shapeToDraw === "Icosahedron") {
@@ -419,23 +367,10 @@
                 mode: gl.LINES
             });
         }
-        objectsToDraw.push(        {
-          color: { r: 0.3, g: 0.3, b: 0.8 },
-          vertices: Shapes.toRawLineArray(Shapes.hemisphere(0.5)),
-          mode: gl.LINES
-        });
+        console.log("length: " + objectsToDraw.length);
 
         drawScene();
 
     });
     
-
-
-
-
-
-
-
-
-
 }(document.getElementById("hello-webgl")));
