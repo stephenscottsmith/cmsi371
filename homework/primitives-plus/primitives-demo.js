@@ -38,6 +38,7 @@
 
 
     // A few circles.
+    // JD: Why are these commented out?
     // Primitives.circleTrig(renderingContext, 105, 315, 100);
     // Primitives.circleDDA(renderingContext, 310, 315, 100);
     // Primitives.circleBres1(renderingContext, 515, 315, 100);
